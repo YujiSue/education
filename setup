@@ -1,0 +1,12 @@
+from distutils.core import setup
+
+setup(
+	name='YSCodes4Education',
+	version='0.1.0',
+	author='Yuji Suehiro',
+	author_email='yuji.sue@gmail.com',
+	py_modules=['sekarte'],
+	url='https://github.com/YujiSue/education',
+	license='MIT license',
+	description='Sample codes used for education.'
+)
