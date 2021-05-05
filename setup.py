@@ -7,4 +7,7 @@ setup(
 	packages=find_packages(),
 	url='https://github.com/YujiSue/education',
 	description='Sample codes used for education.',
+	entry_points = {
+		'console_scripts': ['test = test.test:main']
+	},
 )
