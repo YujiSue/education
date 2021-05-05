@@ -14,4 +14,6 @@ class カルテページ:
     self.患者氏名 = ''
     
   def 記入(self, ID, 氏名, 生年月日):
+    self.患者ID = ID
+    
     
