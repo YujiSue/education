@@ -5,10 +5,11 @@ setup(
 	name='YSCodes4Education',
 	version='0.1.0',
 	author='Yuji Suehiro',
-	packages=find_packages("test"),
-	package_dir={"": "test"},
+	packages=find_packages(),
 	url='https://github.com/YujiSue/education',
-	license='MIT license',
 	description='Sample codes used for education.',
-	py_modules=['test/test.py']
+	entry_points="""
+	[console_scripts]
+	test = test.test:main
+	""",
 )
