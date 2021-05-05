@@ -5,7 +5,8 @@ setup(
 	name='YSCodes4Education',
 	version='0.1.0',
 	author='Yuji Suehiro',
-	packages=find_packages(),
+	packages=find_packages('test'),
+	package_dir={'': 'test'},
 	url='https://github.com/YujiSue/education',
-	description='Sample codes used for education.'
+	description='Sample codes used for education.',
 )
