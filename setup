@@ -5,7 +5,7 @@ setup(
 	version='0.1.0',
 	author='Yuji Suehiro',
 	author_email='yuji.sue@gmail.com',
-	py_modules=['sekarte'],
+	py_modules=['test/test'],
 	url='https://github.com/YujiSue/education',
 	license='MIT license',
 	description='Sample codes used for education.'
