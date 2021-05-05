@@ -2,7 +2,7 @@
 from .test import Test
 from .ekarte import 簡易版電子カルテ
 from .ekarte import カルテページ
-
+import copy
 def sample():
   sample_karte = 簡易版電子カルテ()
   pages = []
@@ -19,6 +19,21 @@ def sample():
   pages[8].記入(110009, '渡辺五郎', '2015-02-25', '男')
   pages[9].記入(110010, '伊藤陸', '2020-03-28', '男')
   
+  dat = 診療データ()
+  dat.診療情報の記入({'名称':'定期健康診断','項目': [{'名称': '身長(cm)'}, {'名称': '体重(kg)'}, {'名称': '視力(両眼)'}, {'名称': '血圧(mmHg)'}]})
+  dat1 = copy.deepcopy(dat)
+  dat1.診療結果の記入({
+    '身長(cm)': 165, '体重(kg)': 60, '視力(両眼)': 1.0, '血圧(mmHg)': '120/75'
+  })
+  dat1.所見の記入('問題なし')
+  pages[0].診療データ追加(dat1)
+  dat2 = copy.deepcopy(dat)
+  dat2.診療結果の記入({
+    '身長(cm)': 170, '体重(kg)': 70, '視力(両眼)': 0.5, '血圧(mmHg)': '145/95'
+  })
+  dat2.所見の記入('高血圧')
+  pages[1].診療データ追加(dat2)
+
   for p in pages:
     sample_karte.ページの追加(p)
   return sample_karte
