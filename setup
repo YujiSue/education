@@ -1,12 +1,14 @@
-from distutils.core import setup
+from setuptools import setup
+from setuptools import find_packages
 
 setup(
 	name='YSCodes4Education',
 	version='0.1.0',
 	author='Yuji Suehiro',
-	author_email='yuji.sue@gmail.com',
-	py_modules=['test/test'],
+	packages=find_packages("test"),
+	package_dir={"": "test"},
 	url='https://github.com/YujiSue/education',
 	license='MIT license',
-	description='Sample codes used for education.'
+	description='Sample codes used for education.',
+	py_modules=['test/test.py']
 )
