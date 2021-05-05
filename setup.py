@@ -2,7 +2,7 @@ from setuptools import setup
 from setuptools import find_packages
 
 setup(
-	name='YSCodes4Education',
+	name='ysedu',
 	author='Yuji Suehiro',
 	packages=find_packages(),
 	url='https://github.com/YujiSue/education',
