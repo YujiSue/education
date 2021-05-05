@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 class 簡易版電子カルテ:
   def __init__(self):
     患者リスト = []
