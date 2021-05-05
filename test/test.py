@@ -1,11 +1,7 @@
-#!usr/bin/env python
 #-*- coding: utf-8 -*-
-
-def testmsg():
-	return "Hello!!!"
-
-def main():
-	print(test())
-
-if __name__ == '__main__':
-	main()
+class Test:
+	def __init__(self):
+		self.id = 0
+    self.name='test'
+  def print(self):
+    print(self.name)
