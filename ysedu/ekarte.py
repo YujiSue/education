@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-
+import copy
+import datetime
 ###############　簡易版電子カルテオブジェクト　##################
 class 簡易版電子カルテ:
   def __init__(self):

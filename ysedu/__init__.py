@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 from .test import Test
 from .ekarte import 簡易版電子カルテ,カルテページ,診療データ
-import copy
-import datetime
 
 def sample():
   sample_karte = 簡易版電子カルテ()
