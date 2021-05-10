@@ -46,7 +46,7 @@ def sample():
   dat22.診療結果の記入('γ-GTP ', 25)
   dat22.診療結果の記入('血糖　　', 120)
   dat22.所見の記入('高血糖')
-  pages[1].診療データ追加(dat3)
+  pages[1].診療データ追加(dat22)
   dat3 = copy.deepcopy(dat01)
   dat3.診療結果の記入('身長 (cm)', 175)
   dat3.診療結果の記入('体重 (kg)', 65)
