@@ -73,12 +73,18 @@ def printResult(pdf_canvas, data):
       pdf_canvas.drawString(30*mm, 240*mm, '氏名:'+task['a'].患者氏名)
       pdf_canvas.drawString(30*mm, 230*mm, '年齢:'+str(task['a'].年齢())+'歳')
       pdf_canvas.drawString(30*mm, 220*mm, '診療データ数:'+str(len(task['a'].診療データリスト)))
-      pos = 210
+      pdf_canvas.showPage()
+      pos = 270
       if (0 < len(task['a'].診療データリスト)):
         for i in range(0, len(task['a'].診療データリスト)):
           pdf_canvas.drawString(30*mm, pos*mm, '> No.'+str(i+1))
-          pdf_canvas.drawString(30*mm, (pos-10)*mm, task['a'].診療データリスト[i].データの取得())
-          pos = pos -20
+          pos = pos - 10
+          pdf_canvas.drawString(30*mm, (pos-10)*mm, task['a'].診療データリスト[i].診療名)
+          pos = pos - 10
+          for 項目 in task['a'].診療データリスト[i].診療項目:
+            pdf_canvas.drawString(40*mm, pos*mm, 項目+':'+str(task['a'].診療データリスト[i].診療結果[項目]))
+            pos = pos - 10
+          pdf_canvas.showPage()
       pdf_canvas.showPage()
 
 def makeReport(data):
