@@ -42,7 +42,7 @@ class カルテノート:
 
   def 要約(self):
     テキスト = ''
-    テキスト = 'ID:'+self.患者ID+'\n氏名:'+self.患者氏名+'\n年齢:'+self.年齢()+'歳\n\n'
+    テキスト = 'ID:'+self.患者ID+'\n氏名:'+self.患者氏名+'\n年齢:'+str(self.年齢())+'歳\n\n'
     テキスト = テキスト+'診療データ数:'+str(len(self.診療データリスト))+'\n'
     if (0 < len(self.診療データリスト)):
       for i in range(0, len(self.診療データリスト)):
@@ -94,7 +94,7 @@ class 診療データ:
   def データの取得(self):
     内容 = ''
     for 項目 in self.診療項目:
-      内容 = 内容 + 項目 + ':' + self.診療結果[項目] + '\n'
+      内容 = 内容 + 項目 + ':' + str(self.診療結果[項目]) + '\n'
     内容 = 内容 + '所見：' + self.医師の所見
     return 内容
 
