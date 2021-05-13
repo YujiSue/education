@@ -32,8 +32,8 @@ class AIテスト:
     
     #画像を表示します
     print('選んだ画像：')
-    display_jpeg(Image(保存先+'jpg'))
-    画像 = image.load_img('演習１用画像.jpg', target_size=(224, 224))
+    display_jpeg(Image(保存先+'.jpg'))
+    画像 = image.load_img(保存先+'.jpg', target_size=(224, 224))
     変換画像 = image.img_to_array(画像)
     変換画像 = np.expand_dims(変換画像, axis=0)
     変換画像 = preprocess_input(変換画像)
