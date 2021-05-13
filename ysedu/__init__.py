@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 #from .test import Test
 from .ekarte import 簡易版電子カルテ,カルテノート,診療データ
+from .ai import AIテスト
 import copy
 
 def sample():
