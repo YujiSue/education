@@ -1,3 +1,4 @@
+from .ekarte import 簡易版電子カルテ,カルテノート,診療データ
 from keras.initializers import TruncatedNormal, Constant
 from keras.preprocessing import image
 from keras.models import Sequential
@@ -5,11 +6,46 @@ from keras.optimizers import SGD
 from keras.layers import Input, Dropout, Flatten, Conv2D, MaxPooling2D, Dense, Activation, BatchNormalization
 from keras.callbacks import Callback, EarlyStopping
 from keras.utils.np_utils import to_categorical
+from keras.preprocessing import image
+from keras.applications.resnet50 import ResNet50
+from keras.applications.resnet50 import preprocess_input, decode_predictions
+from IPython.display import Image, display_jpeg, display_png, display_pdf
 import matplotlib.pyplot as plt
 from matplotlib import ticker
 import glob
 import numpy as np
 import datetime
+import requests
+
+###################ＡＩテスト用クラス##########################
+class AIテスト:
+  def __init__(self):
+    self.AI = ResNet50(weights='imagenet')
+  
+  def 予測(self, 元データ, 保存先):
+    # OpenImageDataseから画像をダウンロードします
+    画像データ = requests.get(元データ)
+    
+    # ダウンロードした画像をファイルに書き込みます
+    画像ファイル = open(保存先+'jpg', 'wb')
+    画像ファイル.write(画像データ.content)
+    
+    #画像を表示します
+    print('選んだ画像：')
+    display_jpeg(Image(保存先+'jpg'))
+    画像 = image.load_img('演習１用画像.jpg', target_size=(224, 224))
+    変換画像 = image.img_to_array(画像)
+    変換画像 = np.expand_dims(変換画像, axis=0)
+    変換画像 = preprocess_input(変換画像)
+    予測 = self.AI.predict(変換画像)
+    結果 = decode_predictions(予測, top=3)[0]
+    
+    # AIが予測した、画像に映っているもの候補の中で可能性の高い結果を上から３つ表示
+    print('AIが予測した画像に映っているもの')
+    print('第１候補：', 結果[0][1], '(予想確率：', '{:.2f}'.format(結果[0][2]*100), '％）')
+    print('第２候補：', 結果[1][1], '(予想確率：', '{:.2f}'.format(結果[1][2]*100), '％）')
+    print('第３候補：', 結果[2][1], '(予想確率：', '{:.2f}'.format(結果[2][2]*100), '％）')
+
 
 # もともとkerasに用意されていた関数を利用して畳み込み関数を作成
 def 畳み込み(フィルタ枚数, サイズ, ストライド,  **その他の引数):
@@ -87,7 +123,7 @@ class AIの脳みそ:
   # 実際の学習を行う関数
   # 今回は教師あり(健常か心拡大か過去に医師が判定した結果がある)学習
   def 勉強(self, 画像, 教師):
-    self.学習の履歴 = self.脳の構造.fit(学習用画像, 教師, batch_size=32, epochs=60)
+    self.学習の履歴 = self.脳の構造.fit(画像, 教師, batch_size=32, epochs=60)
   
   # 未知の患者のデータに対して、健常かそうでないか予測する関数
   def 予測(self, テスト画像):
@@ -114,7 +150,12 @@ class 画像診断AI:
   def 学習(self, 画像, 診断):
     self.脳.勉強(画像, 診断)
 
-  # 判断関数の作成
+  # 過去の学習済データを呼び出す
+  def 思い出す(self, 記憶):
+    self.脳.脳の構造 = model_from_json(open(記憶['モデル'],"r").read())
+    self.脳.脳の構造.load_weights(記憶['結果'])
+
+  # 診断関数の作成
   def 判断(self, 診療データ):
     # 診療データから画像名を取得
     検査データ = 診療データ.診療結果['X線写真']
