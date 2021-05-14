@@ -71,18 +71,19 @@ class 特徴抽出器:
     self.画像データ = cv2.imread(ファイルパス)
 
   def 色抽出(self):
-    下限 = 150
-    上限 = 50
+    下限 = 100
+    上限 = 100
     ラベル = ['赤', '緑', '青']
     
     print('元の画像')
     画像の表示(self.画像データ)
     print('\n')
-    for c in (0,3):
+    for c in (0,2):
       print(ラベル[c], '色の領域のみ抽出')
       編集用 = self.画像データ.copy()
       マスク画像 = cv2.inRange(self.画像データ, np.array([(下限 if c==2 else 0), (下限 if c==1 else 0), (下限 if c==0 else 0)]), np.array([(255 if c==2 else 上限), (255 if c==1 else 上限), (255 if c==0 else 上限)]))
-      編集用[マスク画像==0] = [0, 0, 0]
+      画像の表示(マスク画像)
+      編集用[マスク画像==0] = [255, 255, 255]
       画像の表示(編集用)
 
   def 形状認識(self, param):
