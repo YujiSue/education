@@ -71,20 +71,24 @@ class 特徴抽出器:
     self.画像データ = cv2.imread(ファイルパス)
 
   def 色抽出(self):
-    下限 = 100
-    上限 = 100
     ラベル = ['赤', '緑', '青']
-    
+    HSV画像 = cv2.cvtColor(self.画像データ, cv2.COLOR_BGR2HSV)
+    閾値 = [[np.array([150,43,46]), np.array([210,255,255])], [np.array([30,43,46]), np.array([90,255,255])], [np.array([90,43,46]), np.array([150,255,255])]]
+    閾値H = [[150, 210], [30, 90], [90, 150]]
+    閾値S = 43
+    閾値V = 46
     print('元の画像')
     画像の表示(self.画像データ)
     print('\n')
-    for c in (0,2):
+    for c in range(0, 3):
       print(ラベル[c], '色の領域のみ抽出')
-      編集用 = self.画像データ.copy()
-      マスク画像 = cv2.inRange(self.画像データ, np.array([(下限 if c==2 else 0), (下限 if c==1 else 0), (下限 if c==0 else 0)]), np.array([(255 if c==2 else 上限), (255 if c==1 else 上限), (255 if c==0 else 上限)]))
+      if 180 < 閾値H[c][1]:
+        マスク画像 = cv2.inRange(HSV画像, np.array([閾値H[c][0], 閾値S, 閾値V]), np.array([180, 255, 255])) + cv2.inRange(HSV画像, np.array([0, 閾値S, 閾値V]), np.array([閾値H[c][1]-180, 255, 255]))
+      else:
+        マスク画像 = cv2.inRange(HSV画像, np.array([閾値H[c][0], 閾値S, 閾値V]), np.array([閾値H[c][1], 255, 255]))
       画像の表示(マスク画像)
-      編集用[マスク画像==0] = [255, 255, 255]
-      画像の表示(編集用)
+      結果 = cv2.bitwise_and(self.画像データ, self.画像データ, mask=マスク画像)
+      画像の表示(結果)
 
   def 形状認識(self, param):
     # 直線を検出
@@ -151,7 +155,7 @@ class 特徴抽出器:
 #######################################################
 
 
-# もともとkerasに用意されていた関数を利用して畳み込み関数を作成
+# 畳み込み関数を作成
 def 畳み込み(フィルタ枚数, サイズ, ストライド,  **その他の引数):
     return Conv2D(フィルタ枚数, サイズ, strides=ストライド,
                 padding='same', activation='relu',
@@ -159,11 +163,11 @@ def 畳み込み(フィルタ枚数, サイズ, ストライド,  **その他の
                 bias_initializer=Constant(value=1),
                 **その他の引数
     )
-# もともとkerasに用意されていた関数を利用してプーリング関数を作成
+# プーリング関数を作成
 def プーリング(サイズ, ストライド):
     return MaxPooling2D(pool_size=サイズ, strides=ストライド)
 
-# もともとkerasに用意されていた関数を利用して全結合関数を作成
+# 全結合関数を作成
 def 全結合(ニューロン数, **その他の引数):
     return Dense(ニューロン数, 
         kernel_initializer=TruncatedNormal(mean=0.0, stddev=0.01),
