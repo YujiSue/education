@@ -1,4 +1,3 @@
-from _typeshed import NoneType
 from .ekarte import 簡易版電子カルテ,カルテノート,診療データ
 from keras.initializers import TruncatedNormal, Constant
 from keras.preprocessing import image
@@ -117,9 +116,36 @@ class 特徴抽出器:
       画像の表示(self.画像データ)
       画像の表示(編集用)
 
-
-
-
+  def 顔認識(self, param):
+    # 特徴分類器の読み込み
+    顔検出器 = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+    目検出器 = cv2.CascadeClassifier('haarcascade_eye.xml')
+    
+    # テスト用画像の読み込み
+    テスト用画像 = cv2.imread('MonaLisa.jpg')
+    表示用画像 = テスト用画像.copy()
+    # 計算を簡略化するためにモノクロ化
+    二値化 = cv2.cvtColor(テスト用画像, cv2.COLOR_BGR2GRAY)
+    # 顔を検出
+    顔 = 顔検出器.detectMultiScale(二値化)
+    # 検出された全員の顔について
+    for (x,y,w,h) in 顔:
+      # 検出した顔を青い四角で囲む
+      cv2.rectangle(表示用画像,(x,y),(x+w,y+h),(255,0,0),2)
+      # 顔画像（グレースケール）
+      顔二値 = 二値化[y:y+h, x:x+w]
+      # 顔画像（カラースケール）
+      顔カラー = 表示用画像[y:y+h, x:x+w]
+      # 顔の中から目を検出
+      目位置 = []
+      目 = 目検出器.detectMultiScale(顔二値, scaleFactor=1.07, minNeighbors=1)
+      # ある顔の中から検出された全ての目について
+      for (ex,ey,ew,eh) in 目:
+        目位置.append([ex,ey,ew,eh])
+        # 検出した目を緑の四角で囲む
+        cv2.rectangle(顔カラー,(ex,ey),(ex+ew,ey+eh),(0,255,0),1)
+    
+    画像の表示(表示用画像)
 
 #######################################################
 
