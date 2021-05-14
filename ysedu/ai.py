@@ -1,3 +1,4 @@
+from _typeshed import NoneType
 from .ekarte import 簡易版電子カルテ,カルテノート,診療データ
 from keras.initializers import TruncatedNormal, Constant
 from keras.preprocessing import image
@@ -9,15 +10,16 @@ from keras.utils.np_utils import to_categorical
 from keras.preprocessing import image
 from keras.applications.resnet50 import ResNet50
 from keras.applications.resnet50 import preprocess_input, decode_predictions
-from IPython.display import Image, display_jpeg, display_png, display_pdf
-import matplotlib.pyplot as plt
-from matplotlib import ticker
-import glob
-import numpy as np
+from IPython.display import Image, display, display_jpeg, display_png, display_pdf, clear_output
+import cv2
 import datetime
+import glob
 import requests
+from matplotlib import ticker
+import matplotlib.pyplot as plt
+import numpy as np
 
-###################ＡＩテスト用クラス##########################
+###################ＡＩテスト用クラス####################
 class AIテスト:
   def __init__(self):
     self.AI = ResNet50(weights='imagenet')
@@ -31,7 +33,7 @@ class AIテスト:
     画像ファイル.write(画像データ.content)
     
     #画像を表示します
-    print('選んだ画像：')
+    print('\n選んだ画像：')
     display_jpeg(Image(保存先+'.jpg'))
     画像 = image.load_img(保存先+'.jpg', target_size=(224, 224))
     変換画像 = image.img_to_array(画像)
@@ -39,12 +41,87 @@ class AIテスト:
     変換画像 = preprocess_input(変換画像)
     予測 = self.AI.predict(変換画像)
     結果 = decode_predictions(予測, top=3)[0]
-    
+    print('\n')
     # AIが予測した、画像に映っているもの候補の中で可能性の高い結果を上から３つ表示
     print('AIが予測した画像に映っているもの')
-    print('第１候補：', 結果[0][1], '(予想確率：', '{:.2f}'.format(結果[0][2]*100), '％）')
-    print('第２候補：', 結果[1][1], '(予想確率：', '{:.2f}'.format(結果[1][2]*100), '％）')
-    print('第３候補：', 結果[2][1], '(予想確率：', '{:.2f}'.format(結果[2][2]*100), '％）')
+    if len(結果) == 0:
+      print('  AIが予測に失敗しました')
+    else:
+      print('第１候補：', 結果[0][1], '(予想確率：', '{:.2f}'.format(結果[0][2]*100), '％）')
+      if len(結果) < 2:
+        print('  AIが予測した候補は１つだけでした')
+      else:
+        print('第２候補：', 結果[1][1], '(予想確率：', '{:.2f}'.format(結果[1][2]*100), '％）')
+        if len(結果) < 3:
+          print('  AIが予測した候補は２つだけでした')
+        else:
+          print('第３候補：', 結果[2][1], '(予想確率：', '{:.2f}'.format(結果[2][2]*100), '％）')
+    return 
+#######################################################
+
+###################ＣＶテスト用クラス####################
+def 画像の表示(mat):
+  decoded_bytes = cv2.imencode('.jpg', mat)[1].tobytes()
+  display(Image(data=decoded_bytes))
+
+class 特徴抽出器:
+  def __init__(self):
+    self.画像データ = None
+  
+  def 開く(self, ファイルパス):
+    self.画像データ = cv2.imread(ファイルパス)
+
+  def 色抽出(self):
+    下限 = 150
+    上限 = 50
+    ラベル = ['赤', '緑', '青']
+    
+    print('元の画像')
+    画像の表示(self.画像データ)
+    print('\n')
+    for c in (0,3):
+      print(ラベル[c], '色の領域のみ抽出')
+      編集用 = self.画像データ.copy()
+      マスク画像 = cv2.inRange(self.画像データ, np.array([(下限 if c==2 else 0), (下限 if c==1 else 0), (下限 if c==0 else 0)]), np.array([(255 if c==2 else 上限), (255 if c==1 else 上限), (255 if c==0 else 上限)]))
+      編集用[マスク画像==0] = [0, 0, 0]
+      画像の表示(編集用)
+
+  def 形状認識(self, param):
+    # 直線を検出
+    編集用 = self.画像データ.copy()
+    二値化 = cv2.cvtColor(編集用, cv2.COLOR_BGR2GRAY)
+    エッジ = cv2.Canny(二値化,50,150,apertureSize = 3)
+    直線リスト = cv2.HoughLines(エッジ, 1, np.pi/180,200)
+    # 検出した個々の直線について
+    for 線 in 直線リスト:
+      for rho,theta in 線:
+        a = np.cos(theta)
+        b = np.sin(theta)
+        x0 = a*rho
+        y0 = b*rho
+        x1 = int(x0 + 1000*(-b))
+        y1 = int(y0 + 1000*(a))
+        x2 = int(x0 - 1000*(-b))
+        y2 = int(y0 - 1000*(a))
+        # 検出した線を赤く引く
+        cv2.line(編集用,(x1,y1),(x2,y2),(0,0,255),2)
+    # 円形を検出
+    円リスト = cv2.HoughCircles(二値化, cv2.HOUGH_GRADIENT, 1, 100, param1=100, param2=100, minRadius=10)
+    # 検出した個々の円について
+    for 円 in 円リスト[0]:
+      # 検出した円を緑で縁取り
+      cv2.circle(編集用,(円[0],円[1]),円[2],(0,255,0),2)
+      # 表示
+      cv2.resize(self.画像データ, (256, 256))
+      cv2.resize(編集用, (256, 256))
+      画像の表示(self.画像データ)
+      画像の表示(編集用)
+
+
+
+
+
+#######################################################
 
 
 # もともとkerasに用意されていた関数を利用して畳み込み関数を作成
