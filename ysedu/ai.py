@@ -73,8 +73,8 @@ class 特徴抽出器:
   def 色抽出(self):
     ラベル = ['赤', '緑', '青']
     閾値H = [[150, 200], [20, 90], [90, 150]]
-    閾値S = 33
-    閾値V = 56
+    閾値S = 28
+    閾値V = 61
     self.画像データ = cv2.resize(self.画像データ, (256, 192))
     HSV画像 = cv2.cvtColor(self.画像データ, cv2.COLOR_BGR2HSV)
     print('元の画像')
@@ -128,7 +128,7 @@ class 特徴抽出器:
     目検出器 = cv2.CascadeClassifier('haarcascade_eye.xml')
     
     # テスト用画像の読み込み
-    #表示用画像 = cv2.resize(self.画像データ, (, 320))
+    表示用画像 = cv2.resize(self.画像データ, (360, 480))
     # 計算を簡略化するためにモノクロ化
     二値化 = cv2.cvtColor(表示用画像, cv2.COLOR_BGR2GRAY)
     # 顔を検出
