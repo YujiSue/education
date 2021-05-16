@@ -128,7 +128,7 @@ class 特徴抽出器:
     目検出器 = cv2.CascadeClassifier('haarcascade_eye.xml')
     
     # テスト用画像の読み込み
-    表示用画像 = cv2.resize(self.画像データ, (240, 320))
+    #表示用画像 = cv2.resize(self.画像データ, (, 320))
     # 計算を簡略化するためにモノクロ化
     二値化 = cv2.cvtColor(表示用画像, cv2.COLOR_BGR2GRAY)
     # 顔を検出
@@ -143,7 +143,7 @@ class 特徴抽出器:
       顔カラー = 表示用画像[y:y+h, x:x+w]
       # 顔の中から目を検出
       目位置 = []
-      目 = 目検出器.detectMultiScale(顔二値, scaleFactor=1.07, minNeighbors=1)
+      目 = 目検出器.detectMultiScale(顔二値, scaleFactor=1.01, minNeighbors=1)
       # ある顔の中から検出された全ての目について
       for (ex,ey,ew,eh) in 目:
         目位置.append([ex,ey,ew,eh])
