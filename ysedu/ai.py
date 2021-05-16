@@ -72,10 +72,10 @@ class 特徴抽出器:
 
   def 色抽出(self):
     ラベル = ['赤', '緑', '青']
-    閾値H = [[150, 210], [30, 90], [90, 150]]
-    閾値S = 43
-    閾値V = 46
-    self.画像データ = cv2.resize(self.画像データ, (128, 96))
+    閾値H = [[150, 200], [20, 90], [90, 150]]
+    閾値S = 33
+    閾値V = 56
+    self.画像データ = cv2.resize(self.画像データ, (256, 192))
     HSV画像 = cv2.cvtColor(self.画像データ, cv2.COLOR_BGR2HSV)
     print('元の画像')
     画像の表示(self.画像データ)
@@ -86,7 +86,7 @@ class 特徴抽出器:
         マスク画像 = cv2.inRange(HSV画像, np.array([閾値H[c][0], 閾値S, 閾値V]), np.array([180, 255, 255])) + cv2.inRange(HSV画像, np.array([0, 閾値S, 閾値V]), np.array([閾値H[c][1]-180, 255, 255]))
       else:
         マスク画像 = cv2.inRange(HSV画像, np.array([閾値H[c][0], 閾値S, 閾値V]), np.array([閾値H[c][1], 255, 255]))
-      画像の表示(マスク画像)
+      #画像の表示(マスク画像)
       結果 = cv2.bitwise_and(self.画像データ, self.画像データ, mask=マスク画像)
       画像の表示(結果)
 
