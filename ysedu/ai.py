@@ -72,21 +72,21 @@ class 特徴抽出器:
 
   def 色抽出(self):
     ラベル = ['赤', '緑', '青']
-    閾値H = [[145, 215], [25, 95], [85, 155]]
+    閾値H = [[150, 210], [30, 90], [90, 150]]
     閾値S = 43
     閾値V = 46
-    cv2.resize(self.画像データ, (256, 256))
+    self.画像データ = cv2.resize(self.画像データ, (128, 96))
     HSV画像 = cv2.cvtColor(self.画像データ, cv2.COLOR_BGR2HSV)
     print('元の画像')
     画像の表示(self.画像データ)
     print('\n')
     for c in range(0, 3):
-      print(ラベル[c], '色の領域のみ抽出')
+      print(ラベル[c], '系色の領域のみ抽出')
       if 180 < 閾値H[c][1]:
         マスク画像 = cv2.inRange(HSV画像, np.array([閾値H[c][0], 閾値S, 閾値V]), np.array([180, 255, 255])) + cv2.inRange(HSV画像, np.array([0, 閾値S, 閾値V]), np.array([閾値H[c][1]-180, 255, 255]))
       else:
         マスク画像 = cv2.inRange(HSV画像, np.array([閾値H[c][0], 閾値S, 閾値V]), np.array([閾値H[c][1], 255, 255]))
-      #画像の表示(マスク画像)
+      画像の表示(マスク画像)
       結果 = cv2.bitwise_and(self.画像データ, self.画像データ, mask=マスク画像)
       画像の表示(結果)
 
@@ -123,6 +123,7 @@ class 特徴抽出器:
 
   def 顔認識(self, param):
     # 特徴分類器の読み込み
+
     顔検出器 = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
     目検出器 = cv2.CascadeClassifier('haarcascade_eye.xml')
     
@@ -151,6 +152,8 @@ class 特徴抽出器:
         cv2.rectangle(顔カラー,(ex,ey),(ex+ew,ey+eh),(0,255,0),1)
     
     画像の表示(表示用画像)
+
+  
 
 #######################################################
 
