@@ -128,10 +128,9 @@ class 特徴抽出器:
     目検出器 = cv2.CascadeClassifier('haarcascade_eye.xml')
     
     # テスト用画像の読み込み
-    テスト用画像 = cv2.imread('MonaLisa.jpg')
-    表示用画像 = テスト用画像.copy()
+    表示用画像 = cv2.resize(self.画像データ, (240, 320))
     # 計算を簡略化するためにモノクロ化
-    二値化 = cv2.cvtColor(テスト用画像, cv2.COLOR_BGR2GRAY)
+    二値化 = cv2.cvtColor(表示用画像, cv2.COLOR_BGR2GRAY)
     # 顔を検出
     顔 = 顔検出器.detectMultiScale(二値化)
     # 検出された全員の顔について
