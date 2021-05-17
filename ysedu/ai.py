@@ -63,13 +63,15 @@ class 特徴抽出器:
   
   def 開く(self, ファイルパス):
     self.画像データ = cv2.imread(ファイルパス)
-
+    高さ, 幅 = self.画像データ.shape[:2]
+    比率 = 256.0/幅
+    self.画像データ = cv2.resize(self.画像データ, (int(比率*幅), int(比率*高さ)))
+    
   def 色抽出(self):
     ラベル = ['赤', '緑', '青']
     閾値H = [[150, 200], [20, 90], [90, 150]]
     閾値S = 28
     閾値V = 61
-    self.画像データ = cv2.resize(self.画像データ, (256, 192))
     HSV画像 = cv2.cvtColor(self.画像データ, cv2.COLOR_BGR2HSV)
     print('元の画像')
     画像の表示(self.画像データ)
@@ -86,65 +88,70 @@ class 特徴抽出器:
 
   def 形状認識(self, param):
     # 直線を検出
-    編集用 = self.画像データ.copy()
-    二値化 = cv2.cvtColor(編集用, cv2.COLOR_BGR2GRAY)
-    エッジ = cv2.Canny(二値化,50,150,apertureSize = 3)
-    直線リスト = cv2.HoughLines(エッジ, 1, np.pi/180,200)
-    # 検出した個々の直線について
-    for 線 in 直線リスト:
-      for rho,theta in 線:
-        a = np.cos(theta)
-        b = np.sin(theta)
-        x0 = a*rho
-        y0 = b*rho
-        x1 = int(x0 + 1000*(-b))
-        y1 = int(y0 + 1000*(a))
-        x2 = int(x0 - 1000*(-b))
-        y2 = int(y0 - 1000*(a))
-        # 検出した線を赤く引く
-        cv2.line(編集用,(x1,y1),(x2,y2),(0,0,255),2)
+    二値化 = cv2.cvtColor(self.画像データ, cv2.COLOR_BGR2GRAY)
+    エッジ = cv2.Canny(二値化,50,300,apertureSize = 3)
+    #画像の表示(エッジ)
+    直線リスト = cv2.HoughLines(エッジ, rho=1, theta=np.pi/360, threshold=100)
+    try:
+      # 検出した個々の直線について
+      for 線 in 直線リスト:
+        for rho,theta in 線:
+          a = np.cos(theta)
+          b = np.sin(theta)
+          x0 = a*rho
+          y0 = b*rho
+          x1 = int(x0 + 1000*(-b))
+          y1 = int(y0 + 1000*(a))
+          x2 = int(x0 - 1000*(-b))
+          y2 = int(y0 - 1000*(a))
+          # 検出した線を赤く引く
+          cv2.line(self.画像データ,(x1,y1),(x2,y2),(0,0,255),2)
+    except:
+      print('直線がうまく検出できませんでした')
+    
+    # 画像の表示(self.画像データ)
     # 円形を検出
-    円リスト = cv2.HoughCircles(二値化, cv2.HOUGH_GRADIENT, 1, 100, param1=100, param2=100, minRadius=10)
-    # 検出した個々の円について
-    for 円 in 円リスト[0]:
-      # 検出した円を緑で縁取り
-      cv2.circle(編集用,(円[0],円[1]),円[2],(0,255,0),2)
-      # 表示
-      cv2.resize(self.画像データ, (256, 256))
-      cv2.resize(編集用, (256, 256))
-      画像の表示(self.画像データ)
-      画像の表示(編集用)
+    円リスト = cv2.HoughCircles(二値化, cv2.HOUGH_GRADIENT, 1, 100, param1=200, param2=50, minRadius=10)
+    try:
+      # 検出した個々の円について
+      for 円 in 円リスト[0]:
+        # 検出した円を緑で縁取り
+        cv2.circle(self.画像データ,(円[0],円[1]),円[2],(0,255,0),2)
+    except:
+      print('円がうまく検出できませんでした')
+    # 表示
+    画像の表示(self.画像データ)
 
   def 顔認識(self, param):
     # 特徴分類器の読み込み
-
     顔検出器 = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
     目検出器 = cv2.CascadeClassifier('haarcascade_eye.xml')
     
-    # テスト用画像の読み込み
-    表示用画像 = cv2.resize(self.画像データ, (360, 480))
     # 計算を簡略化するためにモノクロ化
-    二値化 = cv2.cvtColor(表示用画像, cv2.COLOR_BGR2GRAY)
+    二値化 = cv2.cvtColor(self.画像, cv2.COLOR_BGR2GRAY)
     # 顔を検出
     顔 = 顔検出器.detectMultiScale(二値化)
-    # 検出された全員の顔について
-    for (x,y,w,h) in 顔:
-      # 検出した顔を青い四角で囲む
-      cv2.rectangle(表示用画像,(x,y),(x+w,y+h),(255,0,0),2)
-      # 顔画像（グレースケール）
-      顔二値 = 二値化[y:y+h, x:x+w]
-      # 顔画像（カラースケール）
-      顔カラー = 表示用画像[y:y+h, x:x+w]
-      # 顔の中から目を検出
-      目位置 = []
-      目 = 目検出器.detectMultiScale(顔二値, scaleFactor=1.01, minNeighbors=1)
-      # ある顔の中から検出された全ての目について
-      for (ex,ey,ew,eh) in 目:
-        目位置.append([ex,ey,ew,eh])
-        # 検出した目を緑の四角で囲む
-        cv2.rectangle(顔カラー,(ex,ey),(ex+ew,ey+eh),(0,255,0),1)
-    print('顔：青い四角、目：緑の四角')
-    画像の表示(表示用画像)
+    try:
+      # 検出された全員の顔について
+      for (x,y,w,h) in 顔:
+        # 検出した顔を青い四角で囲む
+        cv2.rectangle(self.画像,(x,y),(x+w,y+h),(255,0,0),2)
+        # 顔画像（グレースケール）
+        顔二値 = 二値化[y:y+h, x:x+w]
+        # 顔画像（カラースケール）
+        顔カラー = self.画像[y:y+h, x:x+w]
+        # 顔の中から目を検出
+        目位置 = []
+        目 = 目検出器.detectMultiScale(顔二値, scaleFactor=1.01, minNeighbors=1)
+        # ある顔の中から検出された全ての目について
+        for (ex,ey,ew,eh) in 目:
+          目位置.append([ex,ey,ew,eh])
+          # 検出した目を緑の四角で囲む
+          cv2.rectangle(顔カラー,(ex,ey),(ex+ew,ey+eh),(0,255,0),1)
+      print('顔：青い四角、目：緑の四角')
+      画像の表示(self.画像)
+    except:
+      print('上手く検出できませんでした')
 
 #######################################################
 
