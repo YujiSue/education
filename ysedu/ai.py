@@ -1,7 +1,7 @@
 from .ekarte import 簡易版電子カルテ,カルテノート,診療データ
 from keras.initializers import TruncatedNormal, Constant
 from keras.preprocessing import image
-from keras.models import Sequential
+from keras.models import Sequential,model_from_json
 from keras.optimizers import SGD
 from keras.layers import Input, Dropout, Flatten, Conv2D, MaxPooling2D, Dense, Activation, BatchNormalization
 from keras.callbacks import Callback, EarlyStopping
@@ -128,18 +128,18 @@ class 特徴抽出器:
     目検出器 = cv2.CascadeClassifier('haarcascade_eye.xml')
     
     # 計算を簡略化するためにモノクロ化
-    二値化 = cv2.cvtColor(self.画像, cv2.COLOR_BGR2GRAY)
+    二値化 = cv2.cvtColor(self.画像データ, cv2.COLOR_BGR2GRAY)
     # 顔を検出
     顔 = 顔検出器.detectMultiScale(二値化)
     try:
       # 検出された全員の顔について
       for (x,y,w,h) in 顔:
         # 検出した顔を青い四角で囲む
-        cv2.rectangle(self.画像,(x,y),(x+w,y+h),(255,0,0),2)
+        cv2.rectangle(self.画像データ,(x,y),(x+w,y+h),(255,0,0),2)
         # 顔画像（グレースケール）
         顔二値 = 二値化[y:y+h, x:x+w]
         # 顔画像（カラースケール）
-        顔カラー = self.画像[y:y+h, x:x+w]
+        顔カラー = self.画像データ[y:y+h, x:x+w]
         # 顔の中から目を検出
         目位置 = []
         目 = 目検出器.detectMultiScale(顔二値, scaleFactor=1.01, minNeighbors=1)
@@ -149,7 +149,7 @@ class 特徴抽出器:
           # 検出した目を緑の四角で囲む
           cv2.rectangle(顔カラー,(ex,ey),(ex+ew,ey+eh),(0,255,0),1)
       print('顔：青い四角、目：緑の四角')
-      画像の表示(self.画像)
+      画像の表示(self.画像データ)
     except:
       print('上手く検出できませんでした')
 
