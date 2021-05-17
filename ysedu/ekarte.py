@@ -1,7 +1,12 @@
 # -*- coding: utf-8 -*-
 import datetime
-from matplotlib import pyplot as plt
-plt.axis('off')
+from IPython.display import Image, display
+import cv2
+
+def 検査画像の表示(画像データ):
+  表示用データ = cv2.imencode('.jpg', 画像データ)[1].tobytes()
+  display(Image(data=表示用データ))
+
 ###############　簡易版電子カルテオブジェクト　##################
 class 簡易版電子カルテ:
   def __init__(self):
@@ -108,7 +113,7 @@ class 診療データ:
         画像データ = cv2.imread(self.診療結果[項目])
         画像データ = cv2.resize(画像データ, (256, 256))
         画像データ = cv2.cvtColor(画像データ, cv2.COLOR_BGR2RGB)
-        plt.imshow(画像データ)
+        検査画像の表示(画像データ)
     else:
       for 項目 in self.診療項目:
         print('　　', 項目, '\t', self.診療結果[項目])
