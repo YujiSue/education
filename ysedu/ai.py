@@ -31,7 +31,7 @@ class AIテスト:
     self.画像データ = cv2.imread(ファイルパス)
     print('\n選んだ画像：')
     画像の表示(self.画像データ)
-    画像 = image.load_img(ファイルパス, target_size=(256, 192))
+    画像 = image.load_img(ファイルパス, target_size=(224, 224))
     変換画像 = image.img_to_array(画像)
     変換画像 = np.expand_dims(変換画像, axis=0)
     変換画像 = preprocess_input(変換画像)
