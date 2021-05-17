@@ -1,8 +1,14 @@
 # -*- coding: utf-8 -*-
 #from .test import Test
+from IPython.display import Image, display
+import cv2
 from .ekarte import 簡易版電子カルテ,カルテノート,診療データ
-from .ai import AIテスト,特徴抽出器
+from .ai import AIテスト,特徴抽出器,AIの頭脳,画像診断AI
 import copy
+
+def 画像の表示(mat):
+  decoded_bytes = cv2.imencode('.jpg', mat)[1].tobytes()
+  display(Image(data=decoded_bytes))
 
 def sample():
   sample_karte = 簡易版電子カルテ()
