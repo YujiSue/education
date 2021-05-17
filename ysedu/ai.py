@@ -18,23 +18,20 @@ from matplotlib import ticker
 import matplotlib.pyplot as plt
 import numpy as np
 
+def 画像の表示(mat):
+  decoded_bytes = cv2.imencode('.jpg', mat)[1].tobytes()
+  display(Image(data=decoded_bytes))
+
 ###################ＡＩテスト用クラス####################
 class AIテスト:
   def __init__(self):
     self.AI = ResNet50(weights='imagenet')
   
-  def 予測(self, 元データ, 保存先):
-    # OpenImageDataseから画像をダウンロードします
-    画像データ = requests.get(元データ)
-    
-    # ダウンロードした画像をファイルに書き込みます
-    画像ファイル = open(保存先+'.jpg', 'wb')
-    画像ファイル.write(画像データ.content)
-    
-    #画像を表示します
+  def 予測(self, ファイルパス):
+    self.画像データ = cv2.imread(ファイルパス)
     print('\n選んだ画像：')
-    display_jpeg(Image(保存先+'.jpg'))
-    画像 = image.load_img(保存先+'.jpg', target_size=(224, 224))
+    画像の表示(self.画像データ)
+    画像 = image.load_img(ファイルパス, target_size=(256, 192))
     変換画像 = image.img_to_array(画像)
     変換画像 = np.expand_dims(変換画像, axis=0)
     変換画像 = preprocess_input(変換画像)
@@ -59,9 +56,6 @@ class AIテスト:
 #######################################################
 
 ###################ＣＶテスト用クラス####################
-def 画像の表示(mat):
-  decoded_bytes = cv2.imencode('.jpg', mat)[1].tobytes()
-  display(Image(data=decoded_bytes))
 
 class 特徴抽出器:
   def __init__(self):
@@ -149,13 +143,16 @@ class 特徴抽出器:
         目位置.append([ex,ey,ew,eh])
         # 検出した目を緑の四角で囲む
         cv2.rectangle(顔カラー,(ex,ey),(ex+ew,ey+eh),(0,255,0),1)
-    
+    print('顔：青い四角、目：緑の四角')
     画像の表示(表示用画像)
-
-  
 
 #######################################################
 
+################じゃんけんテスト用クラス#################
+
+
+
+#######################################################
 
 # 畳み込み関数を作成
 def 畳み込み(フィルタ枚数, サイズ, ストライド,  **その他の引数):
@@ -179,7 +176,7 @@ def 全結合(ニューロン数, **その他の引数):
 
 
 ###############　人工知能の学習用オブジェクト　##################
-class AIの脳みそ:
+class AIの頭脳:
   def __init__(self):
     self.脳の構造 = Sequential()
     # 畳み込み層（１層目）
@@ -254,7 +251,7 @@ class AIの脳みそ:
 class 画像診断AI:
   # 初期状態の設定
   def __init__(self):
-    self.脳 = AIの脳みそ()
+    self.脳 = AIの頭脳()
   
   # 学習関数の作成
   def 学習(self, 画像, 診断):
