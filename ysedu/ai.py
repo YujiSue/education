@@ -5,7 +5,7 @@ from tensorflow.keras.models import Sequential,model_from_json
 from tensorflow.keras.optimizers import SGD
 from tensorflow.keras.layers import Input, Dropout, Flatten, Conv2D, MaxPooling2D, Dense, Activation, BatchNormalization
 from tensorflow.keras.callbacks import Callback, EarlyStopping
-from tensorflow.keras.utils.np_utils import to_categorical
+from tensorflow.keras.utils import to_categorical
 from tensorflow.keras.preprocessing import image
 from tensorflow.keras.applications.resnet50 import ResNet50
 from tensorflow.keras.applications.resnet50 import preprocess_input, decode_predictions
