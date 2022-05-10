@@ -90,7 +90,7 @@ class 特徴抽出器:
       #画像の表示(マスク画像)
       結果 = cv2.bitwise_and(self.画像データ, self.画像データ, mask=マスク画像)
       高さ, 幅 = self.画像データ.shape[:2]
-    　比率 = 256.0/幅
+      比率 = 256.0/幅
       結果 = cv2.resize(結果, (int(比率*幅), int(比率*高さ)))
       画像の表示(結果)
     return 'OK'
@@ -163,7 +163,7 @@ class 特徴抽出器:
           cv2.rectangle(顔カラー,(ex,ey),(ex+ew,ey+eh),(0,255,0),1)
       print('顔：青い四角、目：緑の四角')
       高さ, 幅 = self.画像データ.shape[:2]
-    　比率 = 256.0/幅
+      比率 = 256.0/幅
       self.画像データ = cv2.resize(self.画像データ, (int(比率*幅), int(比率*高さ)))
       画像の表示(self.画像データ)
     except:
