@@ -68,8 +68,9 @@ class 特徴抽出器:
   def 開く(self, ファイルパス):
     self.画像データ = cv2.imread(ファイルパス)
     高さ, 幅 = self.画像データ.shape[:2]
-    比率 = 256.0/幅
-    self.画像データ = cv2.resize(self.画像データ, (int(比率*幅), int(比率*高さ)))
+    if 幅 > 1024:
+      比率 = 1024.0/幅
+      self.画像データ = cv2.resize(self.画像データ, (int(比率*幅), int(比率*高さ)))
     
   def 色抽出(self):
     ラベル = ['赤', '緑', '青']
@@ -88,6 +89,8 @@ class 特徴抽出器:
         マスク画像 = cv2.inRange(HSV画像, np.array([閾値H[c][0], 閾値S, 閾値V]), np.array([閾値H[c][1], 255, 255]))
       #画像の表示(マスク画像)
       結果 = cv2.bitwise_and(self.画像データ, self.画像データ, mask=マスク画像)
+      比率 = 256.0/幅
+      結果 = cv2.resize(結果, (int(比率*幅), int(比率*高さ)))
       画像の表示(結果)
     return 'OK'
 
@@ -125,6 +128,8 @@ class 特徴抽出器:
     except:
       print('円がうまく検出できませんでした')
     # 表示
+    比率 = 256.0/幅
+    self.画像データ = cv2.resize(self.画像データ, (int(比率*幅), int(比率*高さ)))
     画像の表示(self.画像データ)
     return 'OK'
 
@@ -155,6 +160,8 @@ class 特徴抽出器:
           # 検出した目を緑の四角で囲む
           cv2.rectangle(顔カラー,(ex,ey),(ex+ew,ey+eh),(0,255,0),1)
       print('顔：青い四角、目：緑の四角')
+      比率 = 256.0/幅
+      self.画像データ = cv2.resize(self.画像データ, (int(比率*幅), int(比率*高さ)))
       画像の表示(self.画像データ)
     except:
       print('上手く検出できませんでした')
