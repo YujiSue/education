@@ -232,7 +232,7 @@ class AIの頭脳:
     self.脳の構造.add(全結合(2, activation='softmax'))
     
     # 脳の構造を最終確定
-    self.脳の構造.compile(optimizer=SGD(lr=0.01), loss='categorical_crossentropy', metrics=['accuracy'])
+    self.脳の構造.compile(optimizer=SGD(learning_rate=0.01), loss='categorical_crossentropy', metrics=['accuracy'])
 
     # 学習過程を記録しておく
     # どんな風に賢くなったかが見れる
