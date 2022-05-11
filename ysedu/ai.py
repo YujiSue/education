@@ -67,12 +67,11 @@ class 特徴抽出器:
   
   def 開く(self, ファイルパス):
     self.画像データ = cv2.imread(ファイルパス)
-    高さ, 幅 = self.画像データ.shape[:2]
-    if 幅 > 1024:
-      比率 = 1024.0/幅
-      self.画像データ = cv2.resize(self.画像データ, (int(比率*幅), int(比率*高さ)))
     
   def 色抽出(self):
+    高さ, 幅 = self.画像データ.shape[:2]
+    比率 = 256.0/幅
+    self.画像データ = cv2.resize(self.画像データ, (int(比率*幅), int(比率*高さ)))
     ラベル = ['赤', '緑', '青']
     閾値H = [[150, 200], [20, 90], [90, 150]]
     閾値S = 28
@@ -89,14 +88,14 @@ class 特徴抽出器:
         マスク画像 = cv2.inRange(HSV画像, np.array([閾値H[c][0], 閾値S, 閾値V]), np.array([閾値H[c][1], 255, 255]))
       #画像の表示(マスク画像)
       結果 = cv2.bitwise_and(self.画像データ, self.画像データ, mask=マスク画像)
-      高さ, 幅 = self.画像データ.shape[:2]
-      比率 = 256.0/幅
-      結果 = cv2.resize(結果, (int(比率*幅), int(比率*高さ)))
       画像の表示(結果)
     return 'OK'
 
   def 形状認識(self, param):
     # 直線を検出
+    高さ, 幅 = self.画像データ.shape[:2]
+    比率 = 256.0/幅
+    self.画像データ = cv2.resize(self.画像データ, (int(比率*幅), int(比率*高さ)))
     二値化 = cv2.cvtColor(self.画像データ, cv2.COLOR_BGR2GRAY)
     エッジ = cv2.Canny(二値化,50,300,apertureSize = 3)
     #画像の表示(エッジ)
@@ -129,13 +128,13 @@ class 特徴抽出器:
     except:
       print('円がうまく検出できませんでした')
     # 表示
-    高さ, 幅 = self.画像データ.shape[:2]
-    比率 = 256.0/幅
-    self.画像データ = cv2.resize(self.画像データ, (int(比率*幅), int(比率*高さ)))
     画像の表示(self.画像データ)
     return 'OK'
 
   def 顔認識(self, param):
+    高さ, 幅 = self.画像データ.shape[:2]
+    比率 = 1024.0/幅
+    self.画像データ = cv2.resize(self.画像データ, (int(比率*幅), int(比率*高さ)), interpolation=cv2.INTER_CUBIC)
     # 特徴分類器の読み込み
     顔検出器 = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
     目検出器 = cv2.CascadeClassifier('haarcascade_eye.xml')
