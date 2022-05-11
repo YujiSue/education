@@ -148,7 +148,7 @@ class 特徴抽出器:
       # 検出された全員の顔について
       for (x,y,w,h) in 顔:
         # 検出した顔を青い四角で囲む
-        cv2.rectangle(self.画像データ,(x,y),(x+w,y+h),(255,0,0),2)
+        cv2.rectangle(self.画像データ,(x,y),(x+w,y+h),(255,0,0),3)
         # 顔画像（グレースケール）
         顔二値 = 二値化[y:y+h, x:x+w]
         # 顔画像（カラースケール）
@@ -160,7 +160,7 @@ class 特徴抽出器:
         for (ex,ey,ew,eh) in 目:
           目位置.append([ex,ey,ew,eh])
           # 検出した目を緑の四角で囲む
-          cv2.rectangle(顔カラー,(ex,ey),(ex+ew,ey+eh),(0,255,0),1)
+          cv2.rectangle(顔カラー,(ex,ey),(ex+ew,ey+eh),(0,255,0),3)
       print('顔：青い四角、目：緑の四角')
       高さ, 幅 = self.画像データ.shape[:2]
       比率 = 256.0/幅
