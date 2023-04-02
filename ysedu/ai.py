@@ -1,6 +1,7 @@
 from .ekarte import 簡易版電子カルテ,カルテノート,診療データ
 from tensorflow.keras.initializers import TruncatedNormal, Constant
 from tensorflow.keras.preprocessing import image
+from keras.utils import load_img, img_to_array
 from tensorflow.keras.models import Sequential,model_from_json
 from tensorflow.keras.optimizers import SGD
 from tensorflow.keras.layers import Input, Dropout, Flatten, Conv2D, MaxPooling2D, Dense, Activation, BatchNormalization
