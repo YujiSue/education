@@ -100,7 +100,7 @@ class 特徴抽出器:
     二値化 = cv2.cvtColor(self.画像データ, cv2.COLOR_BGR2GRAY)
     エッジ = cv2.Canny(二値化,50,300,apertureSize = 3)
     #画像の表示(エッジ)
-    直線リスト = cv2.HoughLines(エッジ, rho=1, theta=np.pi/360, threshold=100)
+    直線リスト = cv2.HoughLines(エッジ, rho=1, theta=np.pi/360, threshold=param['line-threshold'])
     try:
       # 検出した個々の直線について
       for 線 in 直線リスト:
@@ -118,15 +118,15 @@ class 特徴抽出器:
     except:
       print('直線がうまく検出できませんでした')
     
-    # 画像の表示(self.画像データ)
     # 円形を検出
-    円リスト = cv2.HoughCircles(二値化, cv2.HOUGH_GRADIENT, 1, 100, param1=200, param2=50, minRadius=10)
+    円リスト = cv2.HoughCircles(二値化, cv2.HOUGH_GRADIENT, dp=param['circle-dp'], minDist=100, param1=param['circle-p1'], param2=param['circle-p2'], minRadius=1)
     try:
       # 検出した個々の円について
       for 円 in 円リスト[0]:
         # 検出した円を緑で縁取り
-        cv2.circle(self.画像データ,(円[0],円[1]),円[2],(0,255,0),2)
-    except:
+        cv2.circle(self.画像データ,(int(円[0]),int(円[1])),int(円[2]),(0,255,0),2)
+    except Exception as e:
+      print(e)
       print('円がうまく検出できませんでした')
     # 表示
     画像の表示(self.画像データ)
@@ -147,6 +147,8 @@ class 特徴抽出器:
     try:
       # 検出された全員の顔について
       for (x,y,w,h) in 顔:
+        if w < param['min'] or h < param['min']:
+          continue
         # 検出した顔を青い四角で囲む
         cv2.rectangle(self.画像データ,(x,y),(x+w,y+h),(255,0,0),3)
         # 顔画像（グレースケール）
@@ -155,7 +157,7 @@ class 特徴抽出器:
         顔カラー = self.画像データ[y:y+h, x:x+w]
         # 顔の中から目を検出
         目位置 = []
-        目 = 目検出器.detectMultiScale(顔二値, scaleFactor=1.01, minNeighbors=1)
+        目 = 目検出器.detectMultiScale(顔二値, scaleFactor=param['scale'], minNeighbors=param['dist'])
         # ある顔の中から検出された全ての目について
         for (ex,ey,ew,eh) in 目:
           目位置.append([ex,ey,ew,eh])
