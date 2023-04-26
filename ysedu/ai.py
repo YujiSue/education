@@ -290,8 +290,8 @@ class 画像診断AI:
     検査データ = 診療データ.診療結果['X線写真']
     # X線画像を読み込み、人工知能に渡せるように変換
     検査結果画像 = []
-    画像データ = image.load_img(検査データ, color_mode = "grayscale", target_size=(224, 224))
-    検査結果画像.append(image.img_to_array(画像データ))
+    画像データ = load_img(検査データ, color_mode = "grayscale", target_size=(224, 224))
+    検査結果画像.append(img_to_array(画像データ))
     検査結果画像 = np.array(検査結果画像)
     検査結果画像 = 検査結果画像.astype('float32')
     検査結果画像 = 検査結果画像 / 255.0
