@@ -70,7 +70,7 @@ def じゃんけん判定(ファイル, 手画像):
         検出結果 = hands.process(cv2.flip(cv2.cvtColor(画像, cv2.COLOR_BGR2RGB), 1))
         image_hight, image_width, _ = 画像.shape
         # Print handedness (left v.s. right hand).
-        #print(f'Handedness of {name}:')
+        # print(f'Handedness of {name}:')
         # print(results.multi_handedness)
         # Draw hand landmarks of each hand.
         # print(f'Hand landmarks of {name}:')
@@ -79,11 +79,11 @@ def じゃんけん判定(ファイル, 手画像):
         # cv2_imshow(cv2.flip(annotated_image, 1))
         for hand_landmarks in 検出結果.multi_hand_landmarks:
           # Print index finger tip coordinates.
-          #print(
-          #    f'Index finger tip coordinate: (',
-          #    f'{hand_landmarks.landmark[mp_hands.HandLandmark.INDEX_FINGER_TIP].x * image_width}, '
-          #    f'{hand_landmarks.landmark[mp_hands.HandLandmark.INDEX_FINGER_TIP].y * image_hight})'
-          #)
+          print(
+              f'Index finger tip coordinate: (',
+              f'{hand_landmarks.landmark[mp_hands.HandLandmark.INDEX_FINGER_TIP].x * image_width}, '
+              f'{hand_landmarks.landmark[mp_hands.HandLandmark.INDEX_FINGER_TIP].y * image_hight})'
+          )
           検出位置画像 = cv2.flip(画像.copy(), 1)
           mp_drawing.draw_landmarks(
             検出位置画像, hand_landmarks, mp_hands.HAND_CONNECTIONS)
