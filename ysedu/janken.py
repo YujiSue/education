@@ -50,7 +50,7 @@ def takePhoto(file, quality=0.8):
     ''')
   display(js)
   data = eval_js('takePhoto({})'.format(quality))
-  print(data.split(',')[1])
+  #print(data.split(',')[1])
   # 取り込んだデータをColab上に一時保存
   画像データ = b64decode(data.split(',')[1])
   with open(file, 'wb') as f:
@@ -79,11 +79,11 @@ def じゃんけん判定(ファイル, 手画像):
         # cv2_imshow(cv2.flip(annotated_image, 1))
         for hand_landmarks in 検出結果.multi_hand_landmarks:
           # Print index finger tip coordinates.
-          print(
-              f'Index finger tip coordinate: (',
-              f'{hand_landmarks.landmark[mp_hands.HandLandmark.INDEX_FINGER_TIP].x * image_width}, '
-              f'{hand_landmarks.landmark[mp_hands.HandLandmark.INDEX_FINGER_TIP].y * image_hight})'
-          )
+          #print(
+          #    f'Index finger tip coordinate: (',
+          #    f'{hand_landmarks.landmark[mp_hands.HandLandmark.INDEX_FINGER_TIP].x * image_width}, '
+          #    f'{hand_landmarks.landmark[mp_hands.HandLandmark.INDEX_FINGER_TIP].y * image_hight})'
+          #)
           検出位置画像 = cv2.flip(画像.copy(), 1)
           mp_drawing.draw_landmarks(
             検出位置画像, hand_landmarks, mp_hands.HAND_CONNECTIONS)
