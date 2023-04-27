@@ -4,7 +4,7 @@ from IPython.display import Image, display
 import cv2
 from .ekarte import 簡易版電子カルテ,カルテノート,診療データ
 from .ai import AIテスト,特徴抽出器,AIの頭脳,画像診断AI
-from .janken import じゃんけん判定
+#from .janken import じゃんけん判定
 import copy
 
 def 画像の表示(mat):
