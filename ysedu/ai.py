@@ -74,22 +74,22 @@ class 特徴抽出器:
     比率 = 256.0/幅
     self.画像データ = cv2.resize(self.画像データ, (int(比率*幅), int(比率*高さ)))
     ラベル = ['赤', '緑', '青']
-    閾値H = [[150, 200], [20, 90], [90, 150]]
-    閾値S = 28
-    閾値V = 61
-    HSV画像 = cv2.cvtColor(self.画像データ, cv2.COLOR_BGR2HSV)
+    RGB画像 = cv2.cvtColor(self.画像データ, cv2.COLOR_BGR2RGB)
     print('元の画像')
     画像の表示(self.画像データ)
+    width = len(self.画像データ)
+    height = len(self.画像データ[0])
     print('\n')
     for c in range(0, 3):
-      print(ラベル[c], '系色の領域のみ抽出')
-      if 180 < 閾値H[c][1]:
-        マスク画像 = cv2.inRange(HSV画像, np.array([閾値H[c][0], 閾値S, 閾値V]), np.array([180, 255, 255])) + cv2.inRange(HSV画像, np.array([0, 閾値S, 閾値V]), np.array([閾値H[c][1]-180, 255, 255]))
-      else:
-        マスク画像 = cv2.inRange(HSV画像, np.array([閾値H[c][0], 閾値S, 閾値V]), np.array([閾値H[c][1], 255, 255]))
-      #画像の表示(マスク画像)
-      結果 = cv2.bitwise_and(self.画像データ, self.画像データ, mask=マスク画像)
-      画像の表示(結果)
+      print(ラベル[c], '系色のみ抽出')
+      for h in range(0, 高さ):
+        for w in range(0, 幅):
+          for i in range(0, 3):
+            if i == c:
+              RGB画像[h][w][i] = self.画像データ[h][w][i]
+            else:
+              RGB画像[h][w][i] = 0
+      画像の表示(RGB画像)
     return 'OK'
 
   def 形状認識(self, param):
