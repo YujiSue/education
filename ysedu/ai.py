@@ -90,10 +90,13 @@ class 特徴抽出器:
     return 'OK'
 
   def 形状認識(self, param):
-    # 直線を検出
     高さ, 幅 = self.画像データ.shape[:2]
     比率 = 256.0/幅
     self.画像データ = cv2.resize(self.画像データ, (int(比率*幅), int(比率*高さ)))
+    print('元の画像')
+    元画像 = self.画像データ.copy()
+    画像の表示(元画像)
+    # 直線を検出
     二値化 = cv2.cvtColor(self.画像データ, cv2.COLOR_BGR2GRAY)
     エッジ = cv2.Canny(二値化,50,300,apertureSize = 3)
     #画像の表示(エッジ)
