@@ -1,15 +1,15 @@
 from .ekarte import 簡易版電子カルテ,カルテノート,診療データ
-from tensorflow.keras.initializers import TruncatedNormal, Constant
-from tensorflow.keras.preprocessing import image
-from keras.utils import load_img, img_to_array
-from tensorflow.keras.models import Sequential,model_from_json
-from tensorflow.keras.optimizers import SGD
-from tensorflow.keras.layers import Input, Dropout, Flatten, Conv2D, MaxPooling2D, Dense, Activation, BatchNormalization
-from tensorflow.keras.callbacks import Callback, EarlyStopping
-from tensorflow.keras.utils import to_categorical
-from tensorflow.keras.preprocessing import image
-from tensorflow.keras.applications.resnet50 import ResNet50
-from tensorflow.keras.applications.resnet50 import preprocess_input, decode_predictions
+from keras.initializers import TruncatedNormal, Constant
+from keras.preprocessing import image
+from keras.utils import load_img, img_to_array, to_categorical
+from keras.models import Sequential,model_from_json
+from keras.optimizers import SGD
+from keras.layers import Input, Dropout, Flatten, Conv2D, MaxPooling2D, Dense, Activation, BatchNormalization
+from keras.callbacks import Callback, EarlyStopping
+from keras.utils import to_categorical
+from keras.preprocessing import image
+from keras.applications.resnet50 import ResNet50
+from keras.applications.resnet50 import preprocess_input, decode_predictions
 from IPython.display import Image, display, display_jpeg, display_png, display_pdf, clear_output
 import cv2
 import datetime
