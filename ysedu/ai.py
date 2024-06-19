@@ -77,9 +77,8 @@ class 特徴抽出器:
     RGB画像 = cv2.cvtColor(self.画像データ, cv2.COLOR_BGR2RGB)
     print('元の画像')
     画像の表示(self.画像データ)
-    width = len(self.画像データ)
-    height = len(self.画像データ[0])
     print('\n')
+    高さ, 幅 = self.画像データ.shape[:2]
     for c in range(0, 3):
       print(ラベル[c], '系色のみ抽出')
       for h in range(0, 高さ):
