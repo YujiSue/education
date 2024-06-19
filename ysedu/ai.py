@@ -74,20 +74,18 @@ class 特徴抽出器:
     比率 = 256.0/幅
     self.画像データ = cv2.resize(self.画像データ, (int(比率*幅), int(比率*高さ)))
     ラベル = ['赤', '緑', '青']
-    RGB画像 = cv2.cvtColor(self.画像データ, cv2.COLOR_BGR2RGB)
     print('元の画像')
     画像の表示(self.画像データ)
     print('\n')
     高さ, 幅 = self.画像データ.shape[:2]
     for c in range(0, 3):
+      RGB画像 = self.画像データ.copy()
       print(ラベル[c], '系色のみ抽出')
       for h in range(0, 高さ):
         for w in range(0, 幅):
           for i in range(0, 3):
-            if i == c:
-              RGB画像[h][w][i] = self.画像データ[h][w][i]
-            else:
-              RGB画像[h][w][i] = 0
+            if i != c:
+              RGB画像[h][w][2-i] = 0
       画像の表示(RGB画像)
     return 'OK'
 
@@ -100,7 +98,7 @@ class 特徴抽出器:
     エッジ = cv2.Canny(二値化,50,300,apertureSize = 3)
     #画像の表示(エッジ)
     直線リスト = cv2.HoughLines(エッジ, rho=1, theta=np.pi/360, threshold=param['line-threshold'])
-    try:
+    if (直線リスト is not None) and 0 < len(直線リスト):
       # 検出した個々の直線について
       for 線 in 直線リスト:
         for rho,theta in 線:
@@ -114,19 +112,18 @@ class 特徴抽出器:
           y2 = int(y0 - 1000*(a))
           # 検出した線を赤く引く
           cv2.line(self.画像データ,(x1,y1),(x2,y2),(0,0,255),2)
-    except:
-      print('直線がうまく検出できませんでした')
+    else:
+      print('直線はうまく検出できませんでした')
     
     # 円形を検出
     円リスト = cv2.HoughCircles(二値化, cv2.HOUGH_GRADIENT, dp=param['circle-dp'], minDist=100, param1=param['circle-p1'], param2=param['circle-p2'], minRadius=1)
-    try:
+    if (円リスト is not None) and 0 < len(円リスト[0]):
       # 検出した個々の円について
       for 円 in 円リスト[0]:
         # 検出した円を緑で縁取り
         cv2.circle(self.画像データ,(int(円[0]),int(円[1])),int(円[2]),(0,255,0),2)
-    except Exception as e:
-      print(e)
-      print('円がうまく検出できませんでした')
+    else :
+      print('円はうまく検出できませんでした')
     # 表示
     画像の表示(self.画像データ)
     return 'OK'
