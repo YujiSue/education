@@ -89,10 +89,12 @@ def makeReport(dir, filename, content, info):
         ''')
       else:
         f.write(f'''
-        <div >{res['id']}</div>
-        <div style="font-color:red">未実行</div>
+        <div style="border: 0.5px solid black; border-radius:6px; padding: 8px; margin: 5px;">
+        <h3>{res['id']}</h3>
+        { '<h4>コード：</h4><div style="background-color: lightgray; padding: 10px;">'+res['src']+'</div>' if res['type'] == 'practice' else ''}
+        <h4>結果：<span style="color:red;">未実行</span></h4>
+        </div>
         ''')
-
     f.write(f'''</body></html>''')
   cmd = f"google-chrome --disable-gpu --headless --no-margins --no-pdf-header-footer --no-sandbox --print-to-pdf='/content/{filename}' {dir}/report.html"
   res = subprocess.run(cmd, shell=True, capture_output=True, text=True)
