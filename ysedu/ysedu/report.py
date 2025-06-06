@@ -74,7 +74,7 @@ def makeReport(dir, filename, content, info):
   with open(f'{dir}/report.html', 'w') as f:
     f.write(f'''
     <html><body>
-    <h2 style="text-align:center;">プログラミング I (Python実践演習)レポート</h2>
+    <h2 style="text-align:center;">{info['title']}レポート</h2>
     <div style="text-align:right; font-size:18px;"><p>学籍番号：{info['id']}</p><p>氏名：{info['name']}</p><p>作成日：{now.strftime("%Y/%m/%d")}</p></div>
     ''')
     for res in results:
