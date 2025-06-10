@@ -5,7 +5,7 @@ setup(
 	version='1.1',
 	author='Yuji Suehiro',
 	packages=find_packages(),
-  package_data={'': ['sample.json']},
+	package_data={'': ['sample.json']},
 	url='https://github.com/YujiSue/education/ysekarte',
-	description='Sample codes used for education.'
+	description='Codes used for education.'
 )

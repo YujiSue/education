@@ -89,6 +89,7 @@ class 画像判定器:
   # 画像に映っているものを予測
   def 予測(self, 画像ファイル):
     self.画像データ = cv2.imread(画像ファイル)
+    self.画像データ = cv2.cvtColor(self.画像データ, cv2.COLOR_BGR2RGB)
     self.画像データ = 埋め込み画像エンコーダ(self.画像データ)
     self.予測結果 = []
     # 画像読み込み
