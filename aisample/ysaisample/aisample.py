@@ -21,7 +21,6 @@ from keras.applications.resnet50 import preprocess_input, decode_predictions
 from keras.applications.resnet50 import ResNet50
 
 from IPython.display import Image, HTML, display, Javascript, clear_output
-
 from google.colab.output import eval_js
 from google.colab.patches import cv2_imshow
 
@@ -152,6 +151,7 @@ class 特徴抽出器:
   def 開く(self, ファイル):
     self.画像ファイル = ファイル
     self.画像データ = cv2.imread(ファイル)
+    self.画像データ = cv2.cvtColor(self.画像データ, cv2.COLOR_BGR2RGB)
     self.画像データ = 埋め込み画像エンコーダ(self.画像データ, サイズ=(256,-1))
 
   def 色情報の抽出(self):

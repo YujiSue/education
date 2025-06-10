@@ -1,3 +1,3 @@
 # -*- coding: utf-8 -*-
-from .aidoctor import AI医師,ニューラルネット
+from .aidoctor import 画像セレクタ,AI医師,ニューラルネット
 
