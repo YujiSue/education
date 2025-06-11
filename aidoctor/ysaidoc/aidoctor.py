@@ -25,8 +25,6 @@ class 画像セレクタ:
     self.画像名 = f"test.png"
     self.画像データリスト = glob.glob(f"{dir}/*.png")
     self.画像数 = len(self.画像データリスト)
-    self.乱数範囲 = random.randrange(self.画像数)
-    self.選択した画像の番号 = 0
     self.選択した画像 = ''
 
   def selectImage(self):
@@ -35,7 +33,7 @@ class 画像セレクタ:
 
   def changeImage(self):
     clear_output()
-    self.選択した画像の番号 = self.乱数範囲.integers(self.画像数)
+    self.選択した画像の番号 = random.randrange(self.画像数)
     self.選択した画像 = self.画像データリスト[self.選択した画像の番号]
     display(Image(self.選択した画像, width=256))
     display(HTML(f'''

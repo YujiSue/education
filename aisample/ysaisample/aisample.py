@@ -47,8 +47,6 @@ class 画像ダウンローダー:
     current = os.path.dirname(os.path.abspath(__file__))
     self.画像データリスト = pd.read_csv(os.path.join(current, 'test-images-with-rotation.csv'))
     self.画像数 = len(self.画像データリスト)
-    self.乱数範囲 = random.randrange(self.画像数)
-    self.選択した画像の番号 = 0
     self.選択した画像のURL = ''
 
   def selectImage(self):
@@ -58,7 +56,7 @@ class 画像ダウンローダー:
 
   def changeImage(self):
     clear_output()
-    self.選択した画像の番号 = self.乱数範囲.integers(self.画像数)
+    self.選択した画像の番号 = random.randrange(self.画像数)
     self.選択した画像のURL = self.画像データリスト['OriginalURL'][self.選択した画像の番号]
     display(Image(url=self.選択した画像のURL, width=256))
     display(HTML(f'''
