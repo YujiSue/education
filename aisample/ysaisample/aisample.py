@@ -25,7 +25,6 @@ from IPython.display import Image, HTML, display, Javascript, clear_output
 from google.colab.output import eval_js
 from google.colab.patches import cv2_imshow
 
-import mediapipe as mp
 
 ################### Base64エンコーダ ####################
 
@@ -256,117 +255,5 @@ class 特徴抽出器:
       '''
     html += '</div></div>'
     display(HTML(html))
-
-################# じゃんけん判定用クラス ################
-
-def 撮影(file, quality=0.8):
-  js = Javascript('''
-    async function takePhoto(quality) {
-      const div = document.createElement('div');
-      const capture = document.createElement('button');
-      capture.textContent = 'Capture';
-      div.appendChild(capture);
-
-      const video = document.createElement('video');
-      video.style.display = 'block';
-      const stream = await navigator.mediaDevices.getUserMedia({video: true});
-
-      document.body.appendChild(div);
-      div.appendChild(video);
-      video.srcObject = stream;
-      await video.play();
-      google.colab.output.setIframeHeight(document.documentElement.scrollHeight, true);
-      // Wait for Capture to be clicked
-      await new Promise((resolve) => capture.onclick = resolve);
-      //
-      const canvas = document.createElement('canvas');
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
-      canvas.getContext('2d').drawImage(video, 0, 0);
-      stream.getVideoTracks()[0].stop();
-      div.remove();
-      return canvas.toDataURL('image/jpeg', quality);
-    }
-    ''')
-  display(js)
-  データ = eval_js('takePhoto({})'.format(quality))
-  # 取り込んだデータを一時保存
-  画像データ = base64.b64decode(データ.split(',')[1])
-  with open(file, 'wb') as f:
-    f.write(画像データ)
-
-# ユークリッド距離の算出
-def ユークリッド距離(pt1, pt2):
-  return math.sqrt(math.pow(pt1.x - pt2.x, 2) + math.pow(pt1.y - pt2.y, 2))
-# 距離データの取得
-def 距離集合(pts, ori):
-  dist = []
-  for pt in pts:
-    dist.append(ユークリッド距離(pt, ori))
-  return dist
-
-def じゃんけん判定(ファイル, 手画像):
-  mp_hands = mp.solutions.hands
-  mp_drawing = mp.solutions.drawing_utils
-  try:
-    画像 = cv2.imread(ファイル)
-    with mp_hands.Hands(
-      static_image_mode=True,
-      max_num_hands=2,
-      min_detection_confidence=0.0) as hands:
-        検出結果 = hands.process(cv2.flip(cv2.cvtColor(画像, cv2.COLOR_BGR2RGB), 1))
-        image_hight, image_width, _ = 画像.shape
-        if not 検出結果.multi_hand_landmarks:
-          print('検出できませんでした')
-        for hand_landmarks in 検出結果.multi_hand_landmarks:
-          検出位置画像 = cv2.flip(画像.copy(), 1)
-          mp_drawing.draw_landmarks(
-            検出位置画像, hand_landmarks, mp_hands.HAND_CONNECTIONS)
-          cv2_imshow(cv2.resize(検出位置画像, dsize=None, fx=0.5, fy=0.5))
-          基点 = hand_landmarks.landmark[mp_hands.HandLandmark.WRIST]
-          指先 = [
-            hand_landmarks.landmark[mp_hands.HandLandmark.THUMB_TIP],
-            hand_landmarks.landmark[mp_hands.HandLandmark.INDEX_FINGER_TIP],
-            hand_landmarks.landmark[mp_hands.HandLandmark.MIDDLE_FINGER_TIP],
-            hand_landmarks.landmark[mp_hands.HandLandmark.RING_FINGER_TIP],
-            hand_landmarks.landmark[mp_hands.HandLandmark.PINKY_TIP]
-          ]
-          関節 = [
-            hand_landmarks.landmark[mp_hands.HandLandmark.THUMB_MCP],
-            hand_landmarks.landmark[mp_hands.HandLandmark.INDEX_FINGER_PIP],
-            hand_landmarks.landmark[mp_hands.HandLandmark.MIDDLE_FINGER_PIP],
-            hand_landmarks.landmark[mp_hands.HandLandmark.RING_FINGER_PIP],
-            hand_landmarks.landmark[mp_hands.HandLandmark.PINKY_PIP]
-          ]
-          関節までの距離 = 距離集合(関節, 基点)
-          指先までの距離 = 距離集合(指先, 基点)
-          関節までの平均距離 = np.average(np.array(関節までの距離))
-          閾値 = 1.25
-          スコア = 0
-          if 閾値 * 関節までの平均距離 < 指先までの距離[0]:
-            スコア = スコア + 1
-          if 閾値 * 関節までの平均距離 < 指先までの距離[1]:
-            スコア = スコア + 3
-          if 閾値 * 関節までの平均距離 < 指先までの距離[2]:
-            スコア = スコア + 3
-          if 閾値 * 関節までの平均距離 < 指先までの距離[3]:
-            スコア = スコア + 1
-          if 閾値 * 関節までの平均距離 < 指先までの距離[4]:
-            スコア = スコア + 1
-          print('あなたの出した手は...')
-          if 8 <= スコア:
-            #print('パー')
-            cv2_imshow(cv2.resize(手画像[0], dsize=(200,200)))
-          elif 6 <= スコア:
-            #print('チョキ')
-            cv2_imshow(cv2.resize(手画像[1], dsize=(200,200)))
-          elif スコア <= 1:
-            #print('グー')
-            cv2_imshow(cv2.resize(手画像[2], dsize=(200,200)))
-          else:
-            print('不明')
-          break
-  except Exception as e:
-    print(e)
 
 #######################################################
