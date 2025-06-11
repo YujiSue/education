@@ -186,7 +186,7 @@ class 特徴抽出器:
       for 線 in 直線リスト:
         x1, y1, x2, y2 = 線[0]
         # 検出した線を赤く引く
-        cv2.line(画像, (x1, y1), (x2, y2), (255, 0, 0), 2)
+        cv2.line(画像, (x1, y1), (x2, y2), (0, 0, 255), 2)
 
     # 円形を検出
     円リスト = cv2.HoughCircles(二値化, cv2.HOUGH_GRADIENT, dp=1, minDist=100, param1=param['bthreshold'], param2=param['cthreshold'], minRadius=param['minr'])
@@ -197,7 +197,7 @@ class 特徴抽出器:
         cv2.circle(画像,(int(円[0]),int(円[1])),int(円[2]),(127,255,0),3)
 
     self.抽出結果.append({
-        'annotation': '直線的な部分：赤、円形の図形：緑',
+        'annotation': '直線的な部分：青、円形の図形：緑',
         'image': 埋め込み画像エンコーダ(画像, サイズ=(-1,-1))
       })
 
@@ -217,13 +217,11 @@ class 特徴抽出器:
     目検出器 = cv2.CascadeClassifier(os.path.join(current, 'haarcascade_eye.xml'))
 
     # 顔を検出
-    顔 = 顔検出器.detectMultiScale(二値化)
+    顔 = 顔検出器.detectMultiScale(二値化, minSize=param['size'])
 
     for idx,(x,y,w,h) in enumerate(顔):
-        if (w * h) < param['min']:
-          continue
         # 検出した顔を青い四角で囲む
-        cv2.rectangle(画像,(x,y),(x+w,y+h),(0,0,255),3)
+        cv2.rectangle(画像,(x,y),(x+w,y+h),(0,255,0),3)
         # 顔画像（グレースケール）
         顔二値 = 二値化[y:y+h, x:x+w]
         # 顔画像（カラースケール）
@@ -235,10 +233,10 @@ class 特徴抽出器:
         for (ex,ey,ew,eh) in 目:
           目位置.append([ex,ey,ew,eh])
           # 検出した目を緑の四角で囲む
-          cv2.ellipse(顔カラー,(ex+int(ew/2),ey+int(eh/2)),(ew,eh),0,0,360,(0,255,0),3)
+          cv2.ellipse(顔カラー,(ex+int(ew/2),ey+int(eh/2)),(ew,eh),0,0,360,(0,0,255),3)
 
     self.抽出結果.append({
-      'annotation': f"顔：青い四角、目：緑の楕円",
+      'annotation': f"顔：緑の四角、目：青の楕円",
       'image' : 埋め込み画像エンコーダ(画像, サイズ=(256,-1))
     })
 

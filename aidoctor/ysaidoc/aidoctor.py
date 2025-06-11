@@ -4,7 +4,6 @@ import cv2
 import random
 import matplotlib.pyplot as plt
 import numpy as np
-from google.colab.output import eval_js
 
 from keras.initializers import TruncatedNormal, Constant
 from keras.preprocessing import image
@@ -18,6 +17,8 @@ from keras.preprocessing import image
 from keras.applications.resnet50 import ResNet50
 from keras.applications.resnet50 import preprocess_input, decode_predictions
 
+from IPython.display import Image, HTML, display, Javascript, clear_output
+from google.colab import output
 
 #######################################################
 class 画像セレクタ:
