@@ -1,6 +1,7 @@
 import os
 import math
 import datetime
+import random
 
 import base64
 from base64 import b64decode
@@ -50,7 +51,7 @@ class 画像ダウンローダー:
     current = os.path.dirname(os.path.abspath(__file__))
     self.画像データリスト = pd.read_csv(os.path.join(current, 'test-images-with-rotation.csv'))
     self.画像数 = len(self.画像データリスト)
-    self.乱数範囲 = np.random.default_rng()
+    self.乱数範囲 = random.randrange(self.画像数)
     self.選択した画像の番号 = 0
     self.選択した画像のURL = ''
 
