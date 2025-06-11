@@ -22,6 +22,7 @@ from keras.applications.resnet50 import preprocess_input, decode_predictions
 from keras.applications.resnet50 import ResNet50
 
 from IPython.display import Image, HTML, display, Javascript, clear_output
+from google.colab import output
 
 ################### Base64エンコーダ ####################
 
@@ -152,6 +153,7 @@ class 特徴抽出器:
   def 色情報の抽出(self):
     self.抽出結果 = []
     画像 = cv2.imread(self.画像ファイル)
+    画像 = cv2.cvtColor(画像, cv2.COLOR_BGR2RGB)
     スケール = 画像.shape[:2]
     画像 = cv2.resize(画像, (256, int(256.0*スケール[0]/スケール[1])))
     スケール = 画像.shape[:2]
@@ -170,6 +172,7 @@ class 特徴抽出器:
   def 形状の認識(self, param):
     self.抽出結果 = []
     画像 = cv2.imread(self.画像ファイル)
+    画像 = cv2.cvtColor(画像, cv2.COLOR_BGR2RGB)
     スケール = 画像.shape[:2]
     画像 = cv2.resize(画像, (256, int(256.0*スケール[0]/スケール[1])))
     スケール = 画像.shape[:2]
@@ -202,6 +205,7 @@ class 特徴抽出器:
   def 顔認識(self, param):
     self.抽出結果 = []
     画像 = cv2.imread(self.画像ファイル)
+    画像 = cv2.cvtColor(画像, cv2.COLOR_BGR2RGB)
     スケール = 画像.shape[:2]
     画像 = cv2.resize(画像, (512, int(512.0*スケール[0]/スケール[1])))
     # 計算を簡略化するためにモノクロ化
