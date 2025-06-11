@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import glob
 import cv2
+import random
 import matplotlib.pyplot as plt
 import numpy as np
 from google.colab.output import eval_js
@@ -24,7 +25,7 @@ class 画像セレクタ:
     self.画像名 = f"test.png"
     self.画像データリスト = glob.glob(f"{dir}/*.png")
     self.画像数 = len(self.画像データリスト)
-    self.乱数範囲 = np.random.default_rng()
+    self.乱数範囲 = random.randrange(self.画像数)
     self.選択した画像の番号 = 0
     self.選択した画像 = ''
 
