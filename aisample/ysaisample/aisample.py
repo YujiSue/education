@@ -22,9 +22,6 @@ from keras.applications.resnet50 import preprocess_input, decode_predictions
 from keras.applications.resnet50 import ResNet50
 
 from IPython.display import Image, HTML, display, Javascript, clear_output
-from google.colab.output import eval_js
-from google.colab.patches import cv2_imshow
-
 
 ################### Base64エンコーダ ####################
 
