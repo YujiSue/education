@@ -240,13 +240,13 @@ class 特徴抽出器:
     })
 
   def 結果の表示(self, オリジナルの表示=True):
-    html = f'''
-    <div>
-    {"<h3>元画像</h3><img src=\""+self.画像データ+"\">" if オリジナルの表示 else ""}
-    </div>
-    <div><h3>抽出された特徴</h3>
-      <div style="display:flex; flex-direction:row;">{'<div style="flex:auto;"><span style="color:red">抽出できませんでした</span></div>' if len(self.抽出結果) == 0 else ''}
-    '''
+    html = ''
+    if オリジナルの表示:
+      html += f'''
+      <div>
+      <h3>元画像</h3><img src="{self.画像データ}">
+      </div>
+      ''''
     for 結果 in self.抽出結果:
       html += f'''
       <div style="flex:auto;"><p style="color:blue">{結果['annotation']}</p><img src="{結果['image']}"></div>
