@@ -55,6 +55,10 @@ def getTaskResults(note_content):
           res['return'] = 'ok'
           if 'text/html' in last_exe['data']:
             res['output'] = ''.join(last_exe['data']['text/html']).replace('\n', '')
+          elif 'image/png' in last_exe['data']:
+            res['output'] = f'<img src="data:image/png;base64,{last_exe["data"]["image/png"]}">'
+          elif 'image/jpeg' in last_exe['data'] or 'image/jpg' in last_exe['data']:
+            res['output'] = f'<img src="data:image/jpeg;base64,{last_exe["data"]["image/png"]}">'
         # 標準出力
         else:
           res['return'] = 'ok'
