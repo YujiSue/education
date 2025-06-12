@@ -63,7 +63,7 @@ class カルテページ:
     生年月日 = self.患者生年月日.split('-')
     生年 = int(生年月日[0])
     生月 = int(生年月日[1])
-    return 現在.year - 生年 + (1 if 生月 < 現在.month else 0)
+    return 現在.year - 生年 - (0 if 生月 < 現在.month else 1)
 
   def 診療データ追加(self, データ):
     self.診療データリスト.append(データ)

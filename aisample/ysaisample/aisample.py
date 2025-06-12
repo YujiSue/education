@@ -15,7 +15,6 @@ import numpy as np
 import pandas as pd
 import cv2
 
-
 from keras.preprocessing import image
 from keras.utils import load_img, img_to_array, to_categorical
 from keras.applications.resnet50 import preprocess_input, decode_predictions

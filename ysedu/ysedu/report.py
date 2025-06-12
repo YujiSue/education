@@ -13,6 +13,8 @@ def getTaskResults(note_content):
   idlist = {}
   #
   for cell in note_content['ipynb']['cells']:
+    if 'source' not in cell or len(cell['source']) == 0:
+      continue
     if 'task-end' in cell['source'][0]:
       is_task = False
     elif 'prac-end' in cell['source'][0]:
