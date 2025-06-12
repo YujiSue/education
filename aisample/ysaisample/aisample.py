@@ -246,7 +246,7 @@ class 特徴抽出器:
       <div>
       <h3>元画像</h3><img src="{self.画像データ}">
       </div>
-      ''''
+      '''
     for 結果 in self.抽出結果:
       html += f'''
       <div style="flex:auto;"><p style="color:blue">{結果['annotation']}</p><img src="{結果['image']}"></div>
