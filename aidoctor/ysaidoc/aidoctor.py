@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
-import glob
 import cv2
+import glob
+import os
 import random
 import matplotlib.pyplot as plt
 import numpy as np
