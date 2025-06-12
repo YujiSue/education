@@ -239,9 +239,11 @@ class 特徴抽出器:
       'image' : 埋め込み画像エンコーダ(画像, サイズ=(256,-1))
     })
 
-  def 結果の表示(self):
+  def 結果の表示(self, オリジナルの表示=True):
     html = f'''
-    <div><h3>元画像</h3><img src="{self.画像データ}"></div>
+    <div>
+    {"<h3>元画像</h3><img src=\""+self.画像データ+"\">" if オリジナルの表示 else ""}
+    </div>
     <div><h3>抽出された特徴</h3>
       <div style="display:flex; flex-direction:row;">{'<div style="flex:auto;"><span style="color:red">抽出できませんでした</span></div>' if len(self.抽出結果) == 0 else ''}
     '''
