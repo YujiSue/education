@@ -102,7 +102,7 @@ def makeReport(dir, filename, content, info):
         </div>
         ''')
     f.write(f'''</body></html>''')
-  cmd = f"google-chrome --disable-gpu --headless --no-margins --no-pdf-header-footer --no-sandbox --print-to-pdf='/content/{filename}' {dir}/report.html"
+  cmd = f"google-chrome-stable --disable-gpu --headless --no-margins --no-pdf-header-footer --no-sandbox --print-to-pdf='/content/{filename}' {dir}/report.html"
   res = subprocess.run(cmd, shell=True, capture_output=True, text=True)
   if res.returncode == 0:
     return True
