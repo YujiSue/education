@@ -2,6 +2,7 @@ import os
 import math
 import datetime
 import random
+import requests
 
 import base64
 from base64 import b64decode
@@ -57,11 +58,18 @@ class 画像ダウンローダー:
       const node = document.getElementById("sel-img");
       node.src = "{self.選択した画像のURL}";
     '''))
-    
+
+  def saveImage(self):
+    response = requests.get(self.選択した画像のURL)
+    if response.status_code == 200:
+      with open(self.画像名, "wb") as f:
+        f.write(response.content)
+    else:
+      print('ダウンロードに失敗しました。画像を変えて試してみてください。')
+  
   def showSelector(self):
     clear_output()
-    resetImage()
-    display(Image(url=self.選択した画像のURL, width="256"))
+    self.resetImage()
     display(HTML(f'''
       <div>
         <img id="sel-img" src="{self.選択した画像のURL}" width="256" alt="サーバー接続不良"></img>
