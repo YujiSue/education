@@ -47,7 +47,43 @@ class 画像ダウンローダー:
     current = os.path.dirname(os.path.abspath(__file__))
     self.画像データリスト = pd.read_csv(os.path.join(current, 'test-images-with-rotation.csv'))
     self.画像数 = len(self.画像データリスト)
+    self.選択した画像の番号 = 0
     self.選択した画像のURL = ''
+
+  def resetImage(self):
+    self.選択した画像の番号 = random.randrange(self.画像数)
+    self.選択した画像のURL = self.画像データリスト['OriginalURL'][self.選択した画像の番号]
+    display(Javascript(f'''
+      const node = document.getElementById("sel-img");
+      node.src = "{self.選択した画像のURL}";
+    '''))
+    
+  def showSelector(self):
+    clear_output()
+    resetImage()
+    display(Image(url=self.選択した画像のURL, width="256"))
+    display(HTML(f'''
+      <div>
+        <img id="sel-img" src="{self.選択した画像のURL}" width="256" alt="サーバー接続不良"></img>
+      </div>
+      <div>
+        <button id="change">別の画像にする</button>
+        <span style="margin:20px">
+        <button id="select">この画像にする</button>
+        <div style="margin-bottom:10px;"></div>
+      </div>
+      <script>
+        document.querySelector("#change").onclick = function(e) {{
+          google.colab.kernel.invokeFunction("notebook.resetImage", [], {{}});
+        }};
+        document.querySelector("#select").onclick = function(e) {{
+          const img = document.getElementById("sel-img");
+          const link = document.createElement("a");
+          link.href = img.source;
+          link.download = "{self.画像名}";
+          link.click();
+        }};
+      </script>'''))
 
   def selectImage(self):
     print(self.選択した画像のURL)
