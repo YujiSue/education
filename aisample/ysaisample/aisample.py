@@ -44,9 +44,8 @@ def 埋め込み画像エンコーダ(画像データ, サイズ=(-1, -1), 形�
 
 class 画像ダウンローダー:
   def __init__(self, name):
-    self.画像名 = name
-    current = os.path.dirname(os.path.abspath(__file__))
-    self.画像データリスト = pd.read_csv(os.path.join(current, 'test-images-with-rotation.csv'))
+    self.画像名 = f'{name}.png'
+    self.画像データリスト = pd.read_csv('test-images-with-rotation.csv')
     self.画像数 = len(self.画像データリスト)
     self.選択した画像の番号 = 0
     self.選択した画像のURL = ''
@@ -56,17 +55,18 @@ class 画像ダウンローダー:
     self.選択した画像のURL = self.画像データリスト['OriginalURL'][self.選択した画像の番号]
     display(Javascript(f'''
       const node = document.getElementById("sel-img");
+      node.crossOrigin = "anonymous";
       node.src = "{self.選択した画像のURL}";
     '''))
 
-  def saveImage(self):
-    response = requests.get(self.選択した画像のURL)
-    if response.status_code == 200:
-      with open(self.画像名, "wb") as f:
-        f.write(response.content)
-    else:
-      print('ダウンロードに失敗しました。画像を変えて試してみてください。')
-  
+  def saveImage(self, data, width, height):
+    print(f"{self.選択した画像のURL}からダウンロード中")
+    b64 = data.split(',')[1]
+    px = base64.b64decode(b64)
+    with open(self.画像名, "wb") as f:
+      f.write(px)
+    print(f"{self.画像名}として保存")
+    
   def showSelector(self):
     clear_output()
     self.resetImage()
@@ -85,35 +85,18 @@ class 画像ダウンローダー:
           google.colab.kernel.invokeFunction("notebook.resetImage", [], {{}});
         }};
         document.querySelector("#select").onclick = function(e) {{
-          const img = document.getElementById("sel-img");
-          const link = document.createElement("a");
-          link.href = img.source;
-          link.download = "{self.画像名}";
-          link.click();
-        }};
-      </script>'''))
-
-  def selectImage(self):
-    print(self.選択した画像のURL)
-    os.system(f'curl -L -s -o "{self.画像名}.jpg" "{self.選択した画像のURL}"')
-    print(f"{self.画像名}.jpgとしてダウンロード")
-
-  def changeImage(self):
-    clear_output()
-    self.選択した画像の番号 = random.randrange(self.画像数)
-    self.選択した画像のURL = self.画像データリスト['OriginalURL'][self.選択した画像の番号]
-    display(Image(url=self.選択した画像のURL, width=256))
-    display(HTML(f'''
-      <button id="change">別の画像にする</button>
-      <span style="margin:20px">
-      <button id="select">この画像にする</button>
-      <div style="margin-bottom:10px;"></div>
-      <script>
-        document.querySelector("#change").onclick = function(e) {{
-          google.colab.kernel.invokeFunction("notebook.changeImage", [], {{}});
-        }};
-        document.querySelector("#select").onclick = function(e) {{
-          google.colab.kernel.invokeFunction("notebook.selectImage", [], {{}});
+          const img = new Image();
+          img.crossOrigin = 'anonymous';
+          img.onload = () => {{
+            const canvas = document.createElement('canvas');
+            canvas.width = img.width;
+            canvas.height = img.height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0);
+            const dataUrl = canvas.toDataURL('image/png');
+            google.colab.kernel.invokeFunction('notebook.saveImage', [dataUrl, canvas.width, canvas.height], {{}});
+          }};
+          img.src = "{self.選択した画像のURL}";
         }};
       </script>'''))
 
