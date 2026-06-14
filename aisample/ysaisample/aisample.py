@@ -56,7 +56,7 @@ class 画像ダウンローダー:
     self.選択した画像の番号 = random.randrange(self.画像数)
     self.選択した画像のURL = self.画像データリスト['OriginalURL'][self.選択した画像の番号]
     display(Javascript(f'''
-      const node = document.getElementById("sel-img");
+      const node = document.getElementById("{self.key}");
       node.crossOrigin = "anonymous";
       node.src = "{self.選択した画像のURL}";
     '''))
@@ -74,7 +74,7 @@ class 画像ダウンローダー:
     self.resetImage()
     display(HTML(f'''
       <div>
-        <img id="sel-img" src="{self.選択した画像のURL}" width="256" alt="サーバー接続不良"></img>
+        <img id="{self.key}" src="{self.選択した画像のURL}" width="256" alt="サーバー接続不良"></img>
       </div>
       <div>
         <button id="change">別の画像にする</button>
@@ -88,6 +88,7 @@ class 画像ダウンローダー:
         }};
         document.querySelector("#select").onclick = function(e) {{
           const img = new Image();
+          img.src = "{self.選択した画像のURL}";
           img.crossOrigin = 'anonymous';
           img.onload = () => {{
             const canvas = document.createElement('canvas');
@@ -98,7 +99,6 @@ class 画像ダウンローダー:
             const dataUrl = canvas.toDataURL('image/png');
             google.colab.kernel.invokeFunction('notebook.saveImage_{self.key}', [dataUrl, canvas.width, canvas.height], {{}});
           }};
-          img.src = "{self.選択した画像のURL}";
         }};
       </script>'''))
 
