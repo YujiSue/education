@@ -43,13 +43,14 @@ def 埋め込み画像エンコーダ(画像データ, サイズ=(-1, -1), 形�
 ################### 画像ダウンローダー ####################
 
 class 画像ダウンローダー:
-  def __init__(self, name):
+  def __init__(self, name, key):
     self.画像名 = f'{name}.png'
     current = os.path.dirname(os.path.abspath(__file__))
     self.画像データリスト = pd.read_csv(os.path.join(current, 'test-images-with-rotation.csv'))
     self.画像数 = len(self.画像データリスト)
     self.選択した画像の番号 = 0
     self.選択した画像のURL = ''
+    self.key = key
 
   def resetImage(self):
     self.選択した画像の番号 = random.randrange(self.画像数)
@@ -83,7 +84,7 @@ class 画像ダウンローダー:
       </div>
       <script>
         document.querySelector("#change").onclick = function(e) {{
-          google.colab.kernel.invokeFunction("notebook.resetImage", [], {{}});
+          google.colab.kernel.invokeFunction("notebook.resetImage_{self.key}", [], {{}});
         }};
         document.querySelector("#select").onclick = function(e) {{
           const img = new Image();
@@ -95,7 +96,7 @@ class 画像ダウンローダー:
             const ctx = canvas.getContext('2d');
             ctx.drawImage(img, 0, 0);
             const dataUrl = canvas.toDataURL('image/png');
-            google.colab.kernel.invokeFunction('notebook.saveImage', [dataUrl, canvas.width, canvas.height], {{}});
+            google.colab.kernel.invokeFunction('notebook.saveImage_{self.key}', [dataUrl, canvas.width, canvas.height], {{}});
           }};
           img.src = "{self.選択した画像のURL}";
         }};
