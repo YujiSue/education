@@ -45,7 +45,7 @@ def 埋め込み画像エンコーダ(画像データ, サイズ=(-1, -1), 形�
 class 画像ダウンローダー:
   def __init__(self, name, key):
     self.画像名 = f'{name}.png'
-    current = '/content'
+    current = os.path.dirname(os.path.abspath(__file__))
     self.画像データリスト = pd.read_csv(os.path.join(current, 'test-images-with-rotation.csv'))
     self.画像数 = len(self.画像データリスト)
     self.選択した画像の番号 = 0
