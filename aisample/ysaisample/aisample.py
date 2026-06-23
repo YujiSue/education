@@ -43,74 +43,33 @@ def 埋め込み画像エンコーダ(画像データ, サイズ=(-1, -1), 形�
 ################### 画像ダウンローダー ####################
 
 class 画像ダウンローダー:
-  def __init__(self, name, key):
-    self.画像名 = f'{name}.png'
-    current = os.path.dirname(os.path.abspath(__file__))
-    self.画像データリスト = pd.read_csv(os.path.join(current, 'test-images-with-rotation.csv'))
+  def __init__(self, dir, name, ext):
+    self.画像名 = f"{name}.{ext}"
+    self.画像データリスト = glob.glob(f"{dir}/*.{ext}")
     self.画像数 = len(self.画像データリスト)
-    self.選択した画像の番号 = 0
-    self.選択した画像のURL = ''
-    self.key = key
-
-  def resetImage(self):
-    self.選択した画像の番号 = random.randrange(self.画像数)
-    self.選択した画像のURL = self.画像データリスト['OriginalURL'][self.選択した画像の番号]
-    display(Javascript(f'''
-      const node = document.getElementById("img-{self.key}");
-      node.crossOrigin = "anonymous";
-      node.src = "{self.選択した画像のURL}";
-    '''))
+    self.選択した画像 = ''
 
   def selectImage(self):
-    js_code = f"""
-    (async () => {{
-    return new Promise((resolve, reject) => {{
-        const img = new Image();
-        img.crossOrigin = 'anonymous';
-        img.onload = () => {{
-            const canvas = document.createElement('canvas');
-            canvas.width = img.width;
-            canvas.height = img.height;
-            const ctx = canvas.getContext('2d');
-            ctx.drawImage(img, 0, 0);
-            const dataUrl = canvas.toDataURL('image/png');
-            console.log(dataUrl.substr(0,100));
-            resolve(dataUrl);
-        }};
-        img.src = "{self.選択した画像のURL}";
-      }});
-    }})()
-    """
-    result = output.eval_js(js_code)
-    self.saveImage(result)
+    print(f'{self.画像名}として保存')
+    cmd = f'mv "{self.選択した画像}" "{self.画像名}"'
+    os.system(cmd)
 
-  def saveImage(self, data):
-    print(f"{self.選択した画像のURL}からダウンロード中")
-    b64 = data.split(',')[1]
-    px = base64.b64decode(b64)
-    with open(self.画像名, "wb") as f:
-      f.write(px)
-    print(f"{self.画像名}として保存")
-
-  def showSelector(self):
+  def changeImage(self):
     clear_output()
-    self.resetImage()
+    self.選択した画像の番号 = random.randrange(self.画像数)
+    self.選択した画像 = self.画像データリスト[self.選択した画像の番号]
+    display(Image(self.選択した画像, width=256))
     display(HTML(f'''
-      <div>
-        <img id="img-{self.key}" src="{self.選択した画像のURL}" width="256" alt="サーバー接続不良"></img>
-      </div>
-      <div>
-        <button id="change-{self.key}">別の画像にする</button>
-        <span style="margin:20px">
-        <button id="select-{self.key}">この画像にする</button>
-        <div style="margin-bottom:10px;"></div>
-      </div>
+      <button id="change">別の画像にする</button>
+      <span style="margin:20px">
+      <button id="select">この画像にする</button>
+      <div style="margin-bottom:10px;"></div>
       <script>
-        document.querySelector("#change-{self.key}").onclick = function(e) {{
-          google.colab.kernel.invokeFunction("notebook.resetImage_{self.key}", [], {{}});
+        document.querySelector("#change").onclick = function(e) {{
+          google.colab.kernel.invokeFunction("notebook.changeImage", [], {{}});
         }};
-        document.querySelector("#select-{self.key}").onclick = function(e) {{
-          google.colab.kernel.invokeFunction('notebook.selectImage_{self.key}', [], {{}});
+        document.querySelector("#select").onclick = function(e) {{
+          google.colab.kernel.invokeFunction("notebook.selectImage", [], {{}});
         }};
       </script>'''))
 
